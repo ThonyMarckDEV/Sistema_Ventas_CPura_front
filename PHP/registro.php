@@ -53,8 +53,8 @@
     <!-- Loader -->
     <?php include 'loader.php'; ?>
     <!-- Incluir el script al final del body para mejorar la carga -->
-    <script type="module" src="../../js/click-sound.js"></script>
-    <script type="module" src="../../js/typing-sound.js"></script>
+    <script type="module" src="../js/click-sound.js"></script>
+    <script type="module" src="../js/typing-sound.js"></script>
 
 </body>
 </html>

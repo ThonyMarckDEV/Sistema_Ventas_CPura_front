@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página de Agua</title>
+    <title>💧CPURA Landing-Page</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome para los Íconos Sociales -->
     <script src="https://kit.fontawesome.com/a076d05399.js"></script>
@@ -13,20 +13,20 @@
     <nav class="flex justify-between items-center p-4 lg:p-6">
         <a href="#" class="text-3xl font-bold text-teal-500">💧</a>
         <ul class="hidden lg:flex space-x-8 text-gray-700 font-medium">
-            <li><a href="#" class="hover:text-teal-500">Inicio</a></li>
-            <li><a href="#" class="hover:text-teal-500">Sobre Nosotros</a></li>
-            <li><a href="#" class="hover:text-teal-500">Servicios</a></li>
-            <li><a href="#" class="hover:text-teal-500">Contacto</a></li>
+            <li><a href="index.php" class="hover:text-teal-500">Inicio</a></li>
+            <li><a href="./PHP/nosotros.php" class="hover:text-teal-500">Sobre Nosotros</a></li>
+            <li><a href="./PHP/servicios.php" class="hover:text-teal-500">Servicios</a></li>
+            <li><a href="./PHP/contacto.php" class="hover:text-teal-500">Contacto</a></li>
         </ul>
         <button class="lg:hidden text-teal-500 font-bold" id="menuButton">☰</button>
     </nav>
 
     <!-- Menú móvil -->
     <div id="mobileMenu" class="hidden lg:hidden flex flex-col items-center space-y-4 text-gray-700 font-medium mt-4">
-        <a href="#" class="hover:text-teal-500">Inicio</a>
-        <a href="#" class="hover:text-teal-500">Sobre Nosotros</a>
-        <a href="#" class="hover:text-teal-500">Servicios</a>
-        <a href="#" class="hover:text-teal-500">Contacto</a>
+        <a href="index.php" class="hover:text-teal-500">Inicio</a>
+        <a href="./PHP/nosotros.php" class="hover:text-teal-500">Sobre Nosotros</a>
+        <a href="./PHP/servicios.php" class="hover:text-teal-500">Servicios</a>
+        <a href="./PHP/contacto.php" class="hover:text-teal-500">Contacto</a>
     </div>
 
     <!-- Sección Principal -->
@@ -50,7 +50,7 @@
 
     <!-- Íconos de Redes Sociales -->
     <footer class="flex justify-center space-x-4 mt-8 text-teal-500">
-        <a href="#" class="hover:text-teal-600"><i class="fab fa-facebook-f"></i> Facebook</a>
+        <a href="https://www.facebook.com/cpuraoficial" class="hover:text-teal-600"><i class="fab fa-facebook-f"></i> Facebook</a>
         <a href="#" class="hover:text-teal-600"><i class="fab fa-twitter"></i> Twitter</a>
         <a href="#" class="hover:text-teal-600"><i class="fab fa-instagram"></i> Instagram</a>
     </footer>

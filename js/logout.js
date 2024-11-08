@@ -49,5 +49,5 @@ function parseJwt(token) {
     }
 }
 
-// Hacer que la función esté disponible globalmente
+
 window.logout = logout;
