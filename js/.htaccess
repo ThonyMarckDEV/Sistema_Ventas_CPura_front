@@ -6,44 +6,37 @@ RewriteEngine On
 
 # Permitir acceso a archivos específicos en esta carpeta
 
+# LOGIN JS
 RewriteCond %{REQUEST_URI} !/login.js$ [NC]
 RewriteCond %{REQUEST_URI} !/register.js$ [NC]
 RewriteCond %{REQUEST_URI} !/urlHelper.js$ [NC]
-RewriteCond %{REQUEST_URI} !/agregarEspecialidad.js$ [NC]
-RewriteCond %{REQUEST_URI} !/agregarCurso.js$ [NC]
-RewriteCond %{REQUEST_URI} !/gestionarUsuarios.js$ [NC]
-RewriteCond %{REQUEST_URI} !/matricularEstudiante.js$ [NC]
-RewriteCond %{REQUEST_URI} !/asignarEspecialidadDocente.js$ [NC]
-
-RewriteCond %{REQUEST_URI} !/perfilDocente.js$ [NC]
-RewriteCond %{REQUEST_URI} !/anunciosDocente.js$ [NC]
-RewriteCond %{REQUEST_URI} !/asignarAulaDocente.js$ [NC]
-RewriteCond %{REQUEST_URI} !/agregarMaterialDocente.js$ [NC]
-RewriteCond %{REQUEST_URI} !/loadingOverlay.js$ [NC]
-
 RewriteCond %{REQUEST_URI} !/logout.js$ [NC]
 
-RewriteCond %{REQUEST_URI} !/perfilEstudiante.js$ [NC]
-RewriteCond %{REQUEST_URI} !/anunciosAlumno.js$ [NC]
+# CLIENTEJS
+RewriteCond %{REQUEST_URI} !/perfilCliente.js$ [NC]
+RewriteCond %{REQUEST_URI} !/listarProductosCliente.js$ [NC]
 
+
+# OVERlAYS
+RewriteCond %{REQUEST_URI} !/loadingOverlay.js$ [NC]
+
+# ADMINJS
+
+
+
+
+
+# AUTH JS
 RewriteCond %{REQUEST_URI} !/checkRole.js$ [NC]
-
-RewriteCond %{REQUEST_URI} !/contadorAnuncios.js$ [NC]
-RewriteCond %{REQUEST_URI} !/contadorAnucnisoPorCurso.js$ [NC]
-RewriteCond %{REQUEST_URI} !/cursos.js$ [NC]
-RewriteCond %{REQUEST_URI} !/tareasPendientes.js$ [NC]
-RewriteCond %{REQUEST_URI} !/contadorTareas.js$ [NC]
-
 RewriteCond %{REQUEST_URI} !/checkTokenInterval.js$ [NC]
 RewriteCond %{REQUEST_URI} !/lastActivity.js$ [NC]
 RewriteCond %{REQUEST_URI} !/loader.js$ [NC]
-
-RewriteCond %{REQUEST_URI} !/calificaciones.js$ [NC]
-RewriteCond %{REQUEST_URI} !/contadorCalificaciones.js$ [NC]
-
 RewriteCond %{REQUEST_URI} !/sessionManager.js$ [NC]
 RewriteCond %{REQUEST_URI} !/checkInactivity.js$ [NC]
 RewriteCond %{REQUEST_URI} !/click-sound.js$ [NC]
 RewriteCond %{REQUEST_URI} !/typing-sound.js$ [NC]
+RewriteCond %{REQUEST_URI} !/checkStorageToken.js$ [NC]
+
+
 # Redirigir todas las demás solicitudes a /index.php
 RewriteRule ^.*$ /index.php [L,R=302]

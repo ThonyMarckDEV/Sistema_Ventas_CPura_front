@@ -12,48 +12,37 @@
         <h2 class="text-center text-2xl font-bold mb-6">Laravel</h2>
         <h3 class="text-center text-xl font-semibold text-gray-800 mb-6">Entre a su cuenta</h3>
         
-        <form action="login.php" method="POST">
+        <!-- Formulario con id="loginForm" para ser capturado en JavaScript -->
+        <form id="loginForm">
             <div class="mb-4">
                 <label for="email" class="block text-sm font-medium text-gray-700">Correo electrónico<span class="text-red-500">*</span></label>
-                <input type="email" id="email" name="email" class="w-full mt-1 p-2 border border-gray-300 rounded-lg" placeholder="admin@admin.com" required>
+                <input type="text" id="email" name="email" class="w-full mt-1 p-2 border border-gray-300 rounded-lg" placeholder="admin@admin.com" required>
             </div>
 
             <div class="mb-4 relative">
                 <label for="password" class="block text-sm font-medium text-gray-700">Contraseña<span class="text-red-500">*</span></label>
                 <input type="password" id="password" name="password" class="w-full mt-1 p-2 border border-gray-300 rounded-lg" placeholder="••••••••" required>
-                <button type="button" onclick="togglePassword()" class="absolute inset-y-0 right-0 px-3 text-gray-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-.253.813-.64 1.569-1.136 2.24M4.929 4.929l14.142 14.142"/>
-                    </svg>
-                </button>
-            </div>
-
-            <div class="flex items-center mb-4">
-                <input type="checkbox" id="remember" name="remember" class="h-4 w-4 text-teal-500 border-gray-300 rounded">
-                <label for="remember" class="ml-2 block text-sm text-gray-700">Recordarme</label>
             </div>
 
             <button type="submit" class="w-full bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500">
                 Entrar
             </button>
         </form>
+
+        <!-- Loader oculto que se mostrará durante el envío -->
+        <div id="loadingScreen" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center">
+            <div class="loader"></div>
+        </div>
     </div>
 
-    <script>
-        function togglePassword() {
-            const password = document.getElementById("password");
-            password.type = password.type === "password" ? "text" : "password";
-        }
-    </script>
 
-    <script>
-        function togglePassword() {
-              const password = document.getElementById("password");
-              password.type = password.type === "password" ? "text" : "password";
-        }
-    </script>
-       <!-- Scrip que se encarga del logeo -->
-       <script type="module" src="login.js"></script>
+    <!-- Script de autenticación -->
+    <script type="module" src="../../js/login.js"></script>
+
+    <!-- Loader -->
+    <?php include 'loader.php'; ?>
+    <!-- Incluir el script al final del body para mejorar la carga -->
+    <script type="module" src="../../js/click-sound.js"></script>
+    <script type="module" src="../../js/typing-sound.js"></script>
 </body>
 </html>

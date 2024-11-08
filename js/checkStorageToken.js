@@ -3,49 +3,6 @@ import API_BASE_URL from './urlHelper.js';
 // Agregar un evento para verificar el token almacenado al cargar la página
 document.addEventListener("DOMContentLoaded", checkStoredToken);
 
-document.getElementById("loginForm").addEventListener("submit", async function(event) {
-    event.preventDefault();
-
-    document.getElementById("loadingScreen").classList.remove("hidden");
-
-    const correo = document.getElementById("email").value; // Cambiado a correo
-    const password = document.getElementById("password").value;
-
-    try {
-        const response = await fetch(`${API_BASE_URL}/api/login`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ correo, password }) // Enviamos correo en lugar de email
-        });
-
-        if (response.status === 409) {
-            alert("El usuario ya está logueado en otra sesión.");
-            return;
-        } else if (response.status === 401) {
-            alert("Credenciales inválidas. Por favor, intenta de nuevo.");
-            return;
-        } else if (response.status === 404) {
-            alert("Usuario no encontrado.");
-            return;
-        } else if (!response.ok) {
-            throw new Error("Error en la autenticación");
-        }
-
-        const data = await response.json();
-        localStorage.setItem("jwt", data.token);
-        localStorage.setItem("justLoggedIn", "true"); // Bandera para control de redirección
-        setCookie("jwt", data.token, 1); // Expira en 1 día
-
-        // Redirigir según el rol del usuario
-        handleRedirection(data.token);
-    } catch (error) {
-        console.error("Error:", error);
-        alert("Error al iniciar sesión. Por favor, verifica tus credenciales e inténtalo de nuevo.");
-    } finally {
-        document.getElementById("loadingScreen").classList.add("hidden");
-    }
-});
-
 function checkStoredToken() {
     console.log("Verificando token almacenado");
     const token = localStorage.getItem("jwt");
@@ -92,10 +49,6 @@ function handleRedirection(token) {
     }
 }
 
-function setCookie(name, value, days) {
-    const expires = new Date(Date.now() + days * 864e5).toUTCString();
-    document.cookie = `${name}=${value};expires=${expires};path=/;Secure;SameSite=Strict`;
-}
 
 function parseJwt(token) {
     try {

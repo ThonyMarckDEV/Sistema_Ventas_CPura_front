@@ -27,10 +27,9 @@ if (!idUsuario) {
     showNotification("Error de autenticación", "bg-red-500");
 }
 
-// Función para cargar datos del docente
-async function loadAlumnoData() {
+async function loadClienteData() {
     try {
-        const response = await fetch(`${API_BASE_URL}/api/perfilAlumno`, {
+        const response = await fetch(`${API_BASE_URL}/api/perfilCliente`, {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${token}`,
@@ -44,6 +43,10 @@ async function loadAlumnoData() {
         }
 
         const data = await response.json();
+        
+        // Imprimir la URL de la imagen para verificar
+        console.log("URL de la imagen de perfil:", data.data.perfil);
+
         document.getElementById("nombres").value = data.data.nombres;
         document.getElementById("apellidos").value = data.data.apellidos;
         document.getElementById("dni").value = data.data.dni;
@@ -55,7 +58,7 @@ async function loadAlumnoData() {
         document.getElementById("telefono").value = data.data.telefono;
         document.getElementById("departamento").value = data.data.departamento;
 
-         // Cargar imagen de perfil con la URL completa desde Laravel
+        // Cargar imagen de perfil con la URL completa desde Laravel
         // Si no hay imagen, cargar la imagen por defecto del frontend en /img/default-profile.jpg
         document.getElementById("profileImage").src = data.data.perfil || '../../img/default-profile.jpg';
     } catch (error) {
@@ -71,7 +74,7 @@ function uploadProfileImage() {
         // Mostrar el loader al enviar el formulario
         document.getElementById("loadingScreen").classList.remove("hidden");
 
-    fetch(`${API_BASE_URL}/api/uploadProfileImageAlumno/${idUsuario}`, {
+    fetch(`${API_BASE_URL}/api/uploadProfileImageCliente/${idUsuario}`, {
         method: "POST",
         headers: {
             "Authorization": `Bearer ${token}`,
@@ -114,7 +117,7 @@ function uploadProfileImage() {
 }
 
 // Función para actualizar los datos del alumno
-function updateAlumno() {
+function updateCliente() {
     const data = {
         nombres: document.getElementById("nombres").value,
         apellidos: document.getElementById("apellidos").value,
@@ -131,7 +134,7 @@ function updateAlumno() {
        // Mostrar el loader al enviar el formulario
        document.getElementById("loadingScreen").classList.remove("hidden");
 
-    fetch(`${API_BASE_URL}/api/updateAlumno/${idUsuario}`, {
+    fetch(`${API_BASE_URL}/api/updateCliente/${idUsuario}`, {
         method: "PUT",
         headers: {
             "Authorization": `Bearer ${token}`,
@@ -185,7 +188,7 @@ function showNotification(message, bgColor) {
 }
 
 // Cargar los datos del docente al cargar la página
-document.addEventListener("DOMContentLoaded", loadAlumnoData);
+document.addEventListener("DOMContentLoaded", loadClienteData);
 
 window.uploadProfileImage = uploadProfileImage;
-window.updateAlumno = updateAlumno;
+window.updateCliente = updateCliente;
