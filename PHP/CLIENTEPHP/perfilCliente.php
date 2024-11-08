@@ -26,7 +26,7 @@
     <!-- Contenido Principal -->
     <div class="flex-1 p-4 sm:p-6 md:p-8 lg:ml-64 max-w-4xl w-full">
         
-        <h2 class="text-2xl font-semibold mb-8 text-center text-gray-800">Perfil Docente</h2>
+        <h2 class="text-2xl font-semibold mb-8 text-center text-gray-800">Perfil Cliente</h2>
 
         <!-- Imagen de Perfil -->
         <div class="flex justify-center mb-6">

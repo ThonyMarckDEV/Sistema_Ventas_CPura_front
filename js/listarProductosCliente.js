@@ -37,7 +37,7 @@ function displayProductos(productos) {
         row.innerHTML = `
             <td>${producto.nombreProducto}</td>
             <td>${producto.descripcion}</td>
-            <td>${producto.categoria ? producto.categoria.nombreCategoria : 'Sin Categoría'}</td>
+            <td>${producto.nombreCategoria}</td>
             <td>${producto.precio}</td>
             <td>${producto.stock}</td>
             <td><img src="${producto.imagen ? `${API_BASE_URL}/storage/${producto.imagen}` : '../../img/default-product.png'}" alt="${producto.nombreProducto}" class="w-20 h-20 object-cover rounded"></td>
