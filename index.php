@@ -1,57 +1,50 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesión</title>
-    <link rel="icon" href="./img/C.E.B.E.LOGO.png" type="image/png">
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <style>
-        .background-image {
-            background-image: url('./img/cebe.jpeg'); /* Cambia esta ruta */
-            background-size: cover;
-            background-position: center;
-        }
-    </style>
-    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script> <!-- Incluye jwt-decode -->
+    <title>Water Landing Page</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="background-image h-screen flex items-center justify-center">
+<body class="bg-white font-sans">
+    <
+    <nav class="flex justify-between items-center p-6">
+        <a href="#" class="text-3xl font-bold text-teal-500">💧</a>
+        <ul class="flex space-x-8 text-gray-700 font-medium">
+            <li><a href="#" class="hover:text-teal-500">Inicio</a></li>
+            <li><a href="#" class="hover:text-teal-500">Sobre Nosotros</a></li>
+            <li><a href="#" class="hover:text-teal-500">Servicios</a></li>
+            <li><a href="#" class="hover:text-teal-500">Contacto</a></li>
+        </ul>
+    </nav>
 
-    <!-- Contenedor del formulario -->
-    <div class="bg-black bg-opacity-60 p-8 rounded-lg shadow-lg w-full max-w-md mx-4 md:mx-0 text-center">
-        <!-- Título -->
-        <h1 class="text-3xl font-bold text-white mb-4">C.E.B.E</h1>
-        <h2 class="text-xl text-white mb-6">Iniciar Sesión</h2>
-
-        <!-- Formulario -->
-        <form id="loginForm" class="space-y-4">
-            <div>
-                <label for="username" class="block text-white text-left">Usuario:</label>
-                <input type="text" id="username" name="username" required 
-                    class="w-full px-4 py-2 rounded bg-gray-800 bg-opacity-60 text-white placeholder-gray-400 focus:outline-none focus:bg-opacity-80 focus:ring-2 focus:ring-white transition duration-300">
+   
+    <section class="flex flex-col items-center justify-center lg:flex-row lg:justify-between lg:px-24 py-12 lg:py-24">
+        <div class="text-center lg:text-left lg:max-w-md px-6">
+            <h1 class="text-4xl lg:text-5xl font-bold text-teal-700 leading-tight mb-4">Drink more water</h1>
+            <p class="text-lg text-gray-600 mb-6">Pure Water is the World’s First and Foremost Medicine.</p>
+            <div class="flex justify-center lg:justify-start space-x-4 mb-6">
+                <a href="#" class="bg-teal-500 text-white font-semibold py-2 px-4 rounded hover:bg-teal-600">Read More</a>
+                <a href="#" class="bg-teal-100 text-teal-600 font-semibold py-2 px-4 rounded hover:bg-teal-200">Orders</a>
             </div>
+            <p class="text-gray-500 font-medium">#DRINKPUREWATER</p>
+        </div>
 
-            <div>
-                <label for="password" class="block text-white text-left">Contraseña:</label>
-                <input type="password" id="password" name="password" required 
-                    class="w-full px-4 py-2 rounded bg-gray-800 bg-opacity-60 text-white placeholder-gray-400 focus:outline-none focus:bg-opacity-80 focus:ring-2 focus:ring-white transition duration-300">
-            </div>
+        <!-- Right Image Content -->
+        <div class="mt-12 lg:mt-0 lg:max-w-lg relative">
+            <img src="https://via.placeholder.com/500x600" alt="Woman drinking water" class="rounded-lg shadow-md">
+            <div class="absolute top-12 right-10 text-teal-600 font-semibold text-2xl rotate-12">Stay Healthy</div>
+        </div>
+    </section>
 
-            <button type="submit" 
-                class="w-full bg-white text-gray-800 font-semibold py-2 rounded focus:outline-none focus:ring-2 focus:ring-white hover:bg-opacity-20 transition duration-300">
-                Iniciar Sesión
-            </button>
-        </form>
-    </div>
+    <!-- Social Media Icons -->
+    <footer class="flex justify-center space-x-4 mt-12 text-teal-500">
+        <a href="#" class="hover:text-teal-600"><i class="fab fa-facebook-f"></i> Facebook</a>
+        <a href="#" class="hover:text-teal-600"><i class="fab fa-twitter"></i> Twitter</a>
+        <a href="#" class="hover:text-teal-600"><i class="fab fa-instagram"></i> Instagram</a>
+    </footer>
 
-  <!-- Loader -->
-    <?php include './PHP/loader.php'; ?>
-
-    <!-- Script de JavaScript para manejar la autenticación y redirección -->
-    <script type="module" src="./js/login.js"></script>
-    <!-- Incluir el script al final del body para mejorar la carga -->
-<script type="module" src="../../js/click-sound.js"></script>
-<!-- Incluir el script al final del body para mejorar la carga -->
-<script type="module" src="../../js/typing-sound.js"></script>
+    <!-- Font Awesome for Social Icons -->
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
 </body>
 </html>
