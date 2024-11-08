@@ -62,6 +62,7 @@
     </nav>
 </div>
 
+
 <!-- Botón de menú para dispositivos móviles -->
 <button id="menuButton" class="lg:hidden fixed top-4 left-4 z-50 p-2 bg-gray-800 text-white rounded-full" onclick="toggleSidebar()">
     <i class="fas fa-bars"></i>
@@ -82,27 +83,27 @@
     }
 </script>
 
-<!-- Incluir el Modal de Inactividad -->
-<?php include '../inactivity.php'; ?>
-<!-- <script Checka inactyividad Usuario></script> -->
-<script type="module" src="../../js/checkInactivity.js"></script>
-  <!-- Loader -->
-  <?php include '../loader.php'; ?>
+
+<!-- Cargar el archivo JavaScript en todas las páginas -->
+<script type="module" src="../../js/checkTokenInterval.js"></script>
+
 <!-- Overlay de Carga Fijo -->
 <div id="loadingOverlay" class="fixed inset-0 flex items-center justify-center bg-white hidden z-50" style="width: 100vw; height: 100vh;">
         <img src="../../img/carga.gif" alt="Cargando..." class="w-20 h-20"> <!-- Tamaño fijo del GIF -->
 </div>
+
 <script src="../../js/loadingOverlay.js"></script>
 <!-- Incluir el script de autenticación y el script para el botón de menú -->
-<!-- <script type="module" src="../../js/authAdmin.js"></script> -->
 <script type="module" src="../../js/checkRole.js"></script>
 <!-- Script para manejar el cierre de sesión -->
 <script type="module" src="../../js/logout.js"></script>
 <!-- Cargar el archivo JavaScript en todas las páginas -->
-<script type="module" src="../../js/checkTokenInterval.js"></script>
 <script type="module" src="../../js/lastActivity.js"></script>
 <!-- Incluir el script al final del body para mejorar la carga -->
 <script type="module" src="../../js/click-sound.js"></script>
 <!-- Incluir el script al final del body para mejorar la carga -->
 <script type="module" src="../../js/typing-sound.js"></script>
-
+<!-- Incluir el Modal de Inactividad -->
+<?php include '../inactivity.php'; ?>
+<!-- <script Checka inactyividad Usuario></script> -->
+<script type="module" src="../../js/checkInactivity.js"></script>

@@ -6,6 +6,24 @@
     <title>Login</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+<style>
+    .loader {
+        border-width: 4px;
+        border-style: solid;
+        border-color: blue transparent blue transparent; /* Azul y transparente en los bordes alternos */
+        border-radius: 50%; /* Bordes redondeados */
+        width: 64px; /* Ancho del loader */
+        height: 64px; /* Altura del loader */
+        animation: spin 1s linear infinite; /* Animación de giro suave */
+    }
+
+    /* Definimos la animación de giro */
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+</style>
+
 <body class="bg-gray-100 flex items-center justify-center h-screen">
 
     <div class="w-full max-w-sm p-6 bg-white rounded-lg shadow-md">

@@ -5,10 +5,15 @@ const expirationThreshold = 120;   // Intenta renovar si quedan 2 minutos o meno
 // URL base de la API
 import API_BASE_URL from './urlHelper.js';
 
+
 // Función para verificar y renovar el token
 function checkAndRenewToken() {
+    
+    console.log("Verificando Token almacenado");
     const token = localStorage.getItem('jwt');
+
     if (!token) {
+        console.log("No hay token");
         redirectToLogin();
         return;
     }

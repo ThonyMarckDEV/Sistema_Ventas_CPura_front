@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Página de Agua</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome para los Íconos Sociales -->
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
 </head>
 <body class="bg-white font-sans">
     <!-- Navegación -->
@@ -53,11 +55,6 @@
         <a href="#" class="hover:text-teal-600"><i class="fab fa-instagram"></i> Instagram</a>
     </footer>
 
-    <!-- Font Awesome para los Íconos Sociales -->
-    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
-
-    <!-- Loader -->
-    <?php include './PHP/loader.php'; ?>
     <!-- Incluir el script al final del body para mejorar la carga -->
     <script type="module" src="./js/click-sound.js"></script>
     <script type="module" src="./js/typing-sound.js"></script>
@@ -65,7 +62,7 @@
 </body>
 </html>
     <!-- Script de autenticación -->
-    <script type="module" src="./js/checkStorageToken.js"></script>
+    <script type="module" src="./js/checkStorageTokenINDEX.js"></script>
         <!-- Script para mostrar/ocultar el login -->
     <script>
         // Script para el menú móvil

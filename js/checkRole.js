@@ -3,10 +3,10 @@
 import API_BASE_URL from './urlHelper.js';
 
 document.addEventListener("DOMContentLoaded", function() {
+    console.log("Verificando token almacenado");
     const token = localStorage.getItem("jwt");
 
     if (!token) {
-        // Si no hay token, redirigir de inmediato a la página de inicio de sesión
         window.location.href = "../../index.php";
         return;
     }
@@ -40,10 +40,7 @@ document.addEventListener("DOMContentLoaded", function() {
     if (currentPath.includes("/ADMINPHP") && rol !== "admin") {
        alert("Acceso no autorizado.");
         logoutAndRedirect();
-    } else if (currentPath.includes("/DOCENTEPHP") && rol !== "docente") {
-        alert("Acceso no autorizado.");
-        logoutAndRedirect();
-    } else if (currentPath.includes("/ESTUDIANTEPHP") && rol !== "estudiante") {
+    } else if (currentPath.includes("/CLIENTEPHP") && rol !== "cliente") {
         alert("Acceso no autorizado.");
         logoutAndRedirect();
     }

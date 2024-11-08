@@ -81,10 +81,10 @@ function handleRedirection(token) {
 
     switch (rol) {
         case "admin":
-            window.location.href = "../PHP/ADMINPHP/Admin.php";
+            window.location.href = "./PHP/ADMINPHP/Admin.php";
             break;
         case "cliente":
-            window.location.href = "../PHP/CLIENTEPHP/Cliente.php";
+            window.location.href = "./CLIENTEPHP/Cliente.php";
             break;
         default:
             alert("Rol no reconocido");
