@@ -15,7 +15,7 @@ RewriteCond %{REQUEST_URI} !/logout.js$ [NC]
 # CLIENTEJS
 RewriteCond %{REQUEST_URI} !/perfilCliente.js$ [NC]
 RewriteCond %{REQUEST_URI} !/listarProductosCliente.js$ [NC]
-
+RewriteCond %{REQUEST_URI} !/registerUser.js$ [NC]
 
 # OVERlAYS
 RewriteCond %{REQUEST_URI} !/loadingOverlay.js$ [NC]

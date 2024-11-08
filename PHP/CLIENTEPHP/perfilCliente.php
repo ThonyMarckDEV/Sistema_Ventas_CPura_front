@@ -115,6 +115,12 @@
         </form>
     </div>
 
+        <!-- Pantalla de carga -->
+    <div id="loadingScreen" class="hidden fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+        <!-- Puedes agregar un spinner aquí -->
+        <div class="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-16 w-16"></div>
+    </div>
+
     <!-- Scripts de manejo de imagen y actualización -->
     <script type="module" src="../../js/perfilCliente.js"></script>
 </body>

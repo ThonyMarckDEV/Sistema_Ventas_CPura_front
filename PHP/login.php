@@ -27,7 +27,7 @@
 <body class="bg-gray-100 flex items-center justify-center h-screen">
 
     <div class="w-full max-w-sm p-6 bg-white rounded-lg shadow-md">
-        <h2 class="text-center text-2xl font-bold mb-6">Laravel</h2>
+        <h2 class="text-center text-2xl font-bold mb-6">💧CPURA</h2>
         <h3 class="text-center text-xl font-semibold text-gray-800 mb-6">Entre a su cuenta</h3>
         
         <!-- Formulario con id="loginForm" para ser capturado en JavaScript -->
@@ -47,12 +47,18 @@
             </button>
         </form>
 
+        <!-- Enlace de registro -->
+        <div class="mt-4 text-center">
+            <p class="text-sm text-gray-600">
+                ¿Eres nuevo? <a href="registro.php" class="text-teal-500 font-semibold hover:underline">Regístrate aquí</a>
+            </p>
+        </div>
+
         <!-- Loader oculto que se mostrará durante el envío -->
         <div id="loadingScreen" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center">
             <div class="loader"></div>
         </div>
     </div>
-
 
     <!-- Script de autenticación -->
     <script type="module" src="../../js/login.js"></script>

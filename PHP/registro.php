@@ -6,12 +6,12 @@
     <title>Registro</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 flex items-center justify-center h-screen">
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
 
     <div class="w-full max-w-sm p-6 bg-white rounded-lg shadow-md">
         <h2 class="text-center text-2xl font-bold mb-6">Registro de Usuario</h2>
         
-        <form action="registro.php" method="POST">
+        <form id="userForm">
             <div class="mb-4">
                 <label for="nombres" class="block text-sm font-medium text-gray-700">Nombres</label>
                 <input type="text" id="nombres" name="nombres" class="w-full mt-1 p-2 border border-gray-300 rounded-lg" required>
@@ -38,6 +38,12 @@
             </div>
 
             <div class="mb-4">
+                <label for="edad" class="block text-sm font-medium text-gray-700">Edad</label>
+                <input type="number" id="edad" name="edad" class="w-full mt-1 p-2 border border-gray-300 rounded-lg" required>
+            </div>
+
+
+            <div class="mb-4">
                 <label for="password" class="block text-sm font-medium text-gray-700">Contraseña</label>
                 <input type="password" id="password" name="password" class="w-full mt-1 p-2 border border-gray-300 rounded-lg" required>
             </div>
@@ -48,13 +54,20 @@
         </form>
     </div>
 
-    <!-- Script que se encarga del logeo -->
-    <script type="module" src="registro.js"></script>
-    <!-- Loader -->
-    <?php include 'loader.php'; ?>
-    <!-- Incluir el script al final del body para mejorar la carga -->
-    <script type="module" src="../js/click-sound.js"></script>
-    <script type="module" src="../js/typing-sound.js"></script>
+    <!-- Pantalla de carga -->
+    <div id="loadingScreen" class="hidden fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+        <!-- Puedes agregar un spinner aquí -->
+        <div class="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-16 w-16"></div>
+    </div>
 
+    <!-- Notificación -->
+    <div id="notification" style="display: none;"></div>
+
+    <!-- Importa tu archivo JavaScript -->
+    <script type="module" src="../js/registerUser.js"></script>
+        <!-- Incluir el script al final del body para mejorar la carga -->
+    <script type="module" src="../js/click-sound.js"></script>
+    <!-- Incluir el script al final del body para mejorar la carga -->
+    <script type="module" src="../js/typing-sound.js"></script>
 </body>
 </html>
