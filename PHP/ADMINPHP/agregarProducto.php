@@ -71,13 +71,15 @@
                 </div>
             </form>
 
+            <br>
+            <!-- Formulario de Agregar Producto -->
+            <h2 class="text-2xl font-bold mb-4">Listado Productos</h2>
+
             <!-- Campo de Búsqueda -->
             <div class="mt-8 mb-4">
                 <input type="text" id="searchInput" placeholder="Buscar producto..." class="w-full p-2 border rounded">
             </div>
-
-            <!-- Tabla de Productos -->
-            <h2 class="text-2xl font-bold mb-4">Lista de Productos</h2>
+            
             <table class="min-w-full bg-white border rounded shadow">
                 <thead>
                     <tr>

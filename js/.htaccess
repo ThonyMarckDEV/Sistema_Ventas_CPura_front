@@ -17,14 +17,12 @@ RewriteCond %{REQUEST_URI} !/perfilCliente.js$ [NC]
 RewriteCond %{REQUEST_URI} !/listarProductosCliente.js$ [NC]
 RewriteCond %{REQUEST_URI} !/registerUser.js$ [NC]
 
-# OVERlAYS
+# ADMINJS
 RewriteCond %{REQUEST_URI} !/loadingOverlay.js$ [NC]
 RewriteCond %{REQUEST_URI} !/gestionarUsuarios.js$ [NC]
 RewriteCond %{REQUEST_URI} !/register.js$ [NC]
 RewriteCond %{REQUEST_URI} !/gestionarProductos.js$ [NC]
-
-# ADMINJS
-
+RewriteCond %{REQUEST_URI} !/gestionarCategorias.js$ [NC]
 
 # AUTH JS
 RewriteCond %{REQUEST_URI} !/checkRole.js$ [NC]

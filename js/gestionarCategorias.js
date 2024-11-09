@@ -1,0 +1,172 @@
+import API_BASE_URL from './urlHelper.js';
+
+const token = localStorage.getItem("jwt");
+
+// Mostrar notificación
+function showNotification(message, bgColor) {
+    const notification = document.getElementById("notification");
+    notification.textContent = message;
+    notification.className = `fixed top-4 left-1/2 transform -translate-x-1/2 px-4 py-2 text-white font-semibold text-center ${bgColor} rounded shadow-md`;
+    notification.style.display = "block";
+    setTimeout(() => {
+        notification.style.display = "none";
+    }, 5000);
+}
+
+// Enviar el formulario de categoría
+function submitCategoryForm() {
+    const form = document.getElementById("categoryForm");
+    const formData = new FormData(form);
+
+    fetch(`${API_BASE_URL}/api/agregarCategoria`, {
+        method: "POST",
+        headers: {
+            "Authorization": `Bearer ${token}`
+        },
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+                          
+            // Reproducir el sonido success
+            var sonido = new Audio('../../songs/success.mp3'); // Asegúrate de que la ruta sea correcta
+            sonido.play().catch(function(error) {
+                console.error("Error al reproducir el sonido:", error);
+            });
+            //=============================================================
+            showNotification("Categoría agregada exitosamente", "bg-green-500");
+            form.reset();
+            listCategories(); // Actualiza la lista de categorías
+        } else {
+              // Reproducir el sonido error
+              var sonido = new Audio('../../songs/error.mp3');
+              sonido.play().catch(function(error) {
+                  console.error("Error al reproducir el sonido:", error);
+              });           
+             //=============================================================          
+            showNotification(data.message || "Error al agregar categoría", "bg-red-500");
+        }
+    })
+    .catch(error => console.error("Error:", error));
+}
+
+// Cargar y listar categorías
+function listCategories() {
+    fetch(`${API_BASE_URL}/api/listarCategorias`, {
+        headers: {
+            "Authorization": `Bearer ${token}`
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        renderCategoryTable(data.data);
+    })
+    .catch(error => console.error("Error al cargar categorías:", error));
+}
+
+function renderCategoryTable(categories) {
+    const categoryTableBody = document.getElementById("categoryTableBody");
+    categoryTableBody.innerHTML = "";
+
+    categories.forEach(category => {
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+            <td class="p-3 border-b">${category.idCategoria}</td>
+            <td class="p-3 border-b">
+                <input type="text" value="${category.nombreCategoria}" class="border p-1 rounded-md w-full" id="nombreCategoria-${category.idCategoria}">
+            </td>
+            <td class="p-3 border-b">
+                <textarea class="border p-1 rounded-md w-full" id="descripcion-${category.idCategoria}">${category.descripcion || ''}</textarea>
+            </td>
+            <td class="p-3 border-b flex space-x-2">
+                <button onclick="updateCategory(${category.idCategoria})" class="bg-blue-500 text-white px-3 py-1 rounded">Actualizar</button>
+                <button onclick="deleteCategory(${category.idCategoria})" class="bg-red-500 text-white px-3 py-1 rounded">Eliminar</button>
+            </td>
+        `;
+
+        categoryTableBody.appendChild(row);
+    });
+}
+
+// Función para eliminar una categoría
+function deleteCategory(id) {
+    fetch(`${API_BASE_URL}/api/eliminarCategoria/${id}`, {
+        method: "DELETE",
+        headers: {
+            "Authorization": `Bearer ${token}`
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+                // Reproducir el sonido success
+                var sonido = new Audio('../../songs/success.mp3'); // Asegúrate de que la ruta sea correcta
+                sonido.play().catch(function(error) {
+                    console.error("Error al reproducir el sonido:", error);
+                });
+                //=============================================================        
+            showNotification("Categoría eliminada exitosamente", "bg-green-500");
+            listCategories(); // Actualiza la lista de categorías
+        } else {
+                  // Reproducir el sonido error
+                  var sonido = new Audio('../../songs/error.mp3');
+                  sonido.play().catch(function(error) {
+                      console.error("Error al reproducir el sonido:", error);
+                  });           
+                 //=============================================================            
+            showNotification(data.message || "Error al eliminar categoría", "bg-red-500");
+        }
+    })
+    .catch(error => console.error("Error al eliminar categoría:", error));
+}
+
+function updateCategory(id) {
+    const nombreCategoria = document.getElementById(`nombreCategoria-${id}`).value;
+    const descripcion = document.getElementById(`descripcion-${id}`).value;
+
+    fetch(`${API_BASE_URL}/api/actualizarCategoria/${id}`, {
+        method: "PUT",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            nombreCategoria: nombreCategoria,
+            descripcion: descripcion
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+                   // Reproducir el sonido success
+                   var sonido = new Audio('../../songs/success.mp3'); // Asegúrate de que la ruta sea correcta
+                   sonido.play().catch(function(error) {
+                       console.error("Error al reproducir el sonido:", error);
+                   });
+                   //=============================================================              
+            showNotification("Categoría actualizada exitosamente", "bg-green-500");
+            listCategories(); // Refresca la lista de categorías después de actualizar
+        } else {
+                 // Reproducir el sonido error
+                 var sonido = new Audio('../../songs/error.mp3');
+                 sonido.play().catch(function(error) {
+                     console.error("Error al reproducir el sonido:", error);
+                 });           
+                //=============================================================             
+            showNotification(data.message || "Error al actualizar categoría", "bg-red-500");
+        }
+    })
+    .catch(error => console.error("Error al actualizar categoría:", error));
+}
+
+
+// Cargar categorías al iniciar
+document.addEventListener("DOMContentLoaded", () => {
+    listCategories();
+});
+
+window.submitCategoryForm = submitCategoryForm;
+window.deleteCategory = deleteCategory;
+window.updateCategory = updateCategory;

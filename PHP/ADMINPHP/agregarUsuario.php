@@ -134,8 +134,7 @@
 
 
         <!-- Tabla de Usuarios -->
-        <h3 class="text-xl font-semibold mb-4 mt-10 text-white">Listado de Usuarios</h3>
-
+        <h3 lass="text-2xl font-bold mb-4">Listado de Usuarios</h3>
         
         <!-- Campo de búsqueda -->
         <div class="mb-4">
