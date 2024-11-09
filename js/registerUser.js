@@ -93,8 +93,10 @@ function submitRegisterForm() {
     })
     .then(response => {
         if (!response.ok) {
-            console.error("Respuesta del servidor:", response);
-            throw new Error('Error en la solicitud');
+            return response.json().then(errorData => {
+                console.error("Errores de validación del servidor:", errorData.errors);
+                throw new Error(errorData.message || 'Error en la solicitud');
+            });
         }
         return response.json();
     })
@@ -115,7 +117,7 @@ function submitRegisterForm() {
     })
     .catch(error => {
         console.error("Error:", error);
-        showNotification("Error en la solicitud", "bg-red-500");
+        showNotification(error.message || "Error en la solicitud", "bg-red-500");
     })
     .finally(() => {
         loadingScreen.classList.add("hidden");

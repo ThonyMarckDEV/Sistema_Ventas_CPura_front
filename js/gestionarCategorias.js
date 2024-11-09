@@ -1,7 +1,7 @@
 import API_BASE_URL from './urlHelper.js';
 
 const token = localStorage.getItem("jwt");
-
+let categories = []; // Variable global para almacenar las categorías cargadas
 // Mostrar notificación
 function showNotification(message, bgColor) {
     const notification = document.getElementById("notification");
@@ -60,7 +60,8 @@ function listCategories() {
     })
     .then(response => response.json())
     .then(data => {
-        renderCategoryTable(data.data);
+        categories = data.data; // Almacena las categorías en la variable global
+        renderCategoryTable(categories);
     })
     .catch(error => console.error("Error al cargar categorías:", error));
 }
@@ -161,6 +162,16 @@ function updateCategory(id) {
     .catch(error => console.error("Error al actualizar categoría:", error));
 }
 
+// Función para buscar categorías
+function filterCategories() {
+    const searchTerm = document.getElementById("searchInput").value.toLowerCase();
+    const filteredCategories = categories.filter(category => 
+        category.nombreCategoria.toLowerCase().includes(searchTerm) ||
+        (category.descripcion && category.descripcion.toLowerCase().includes(searchTerm))
+    );
+    renderCategoryTable(filteredCategories);
+}
+
 
 // Cargar categorías al iniciar
 document.addEventListener("DOMContentLoaded", () => {
@@ -170,3 +181,4 @@ document.addEventListener("DOMContentLoaded", () => {
 window.submitCategoryForm = submitCategoryForm;
 window.deleteCategory = deleteCategory;
 window.updateCategory = updateCategory;
+window.filterCategories = filterCategories;

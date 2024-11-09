@@ -133,8 +133,10 @@
         </form>
 
 
-        <!-- Tabla de Usuarios -->
-        <h3 lass="text-2xl font-bold mb-4">Listado de Usuarios</h3>
+        <br>
+         <!-- Formulario de Agregar Producto -->
+        <h2 class="text-2xl font-bold mb-4">Listado Usuarios</h2>
+
         
         <!-- Campo de búsqueda -->
         <div class="mb-4">

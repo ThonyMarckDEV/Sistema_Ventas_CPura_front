@@ -49,6 +49,11 @@
                 </div>
             </form>
 
+            <!-- Campo de Búsqueda -->
+            <div class="mb-4">
+                <input type="text" id="searchInput" placeholder="Buscar categoría..." class="w-full p-2 border rounded" oninput="filterCategories()">
+            </div>
+
             <!-- Tabla de Categorías -->
             <h2 class="text-2xl font-bold mb-4">Lista de Categorías</h2>
             <table class="min-w-full bg-white border rounded shadow">

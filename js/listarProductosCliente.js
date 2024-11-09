@@ -1,4 +1,6 @@
 import API_BASE_URL from './urlHelper.js';
+import { showModal } from './agregarCarrito.js';
+
 
 document.addEventListener("DOMContentLoaded", () => {
     fetchProductos();
@@ -42,7 +44,7 @@ function displayProductos(productos) {
             <td>${producto.stock}</td>
             <td><img src="${producto.imagen ? `${API_BASE_URL}/storage/${producto.imagen}` : '../../img/default-product.png'}" alt="${producto.nombreProducto}" class="w-20 h-20 object-cover rounded"></td>
             <td>
-                <button onclick="agregarAlCarrito(${producto.idProducto})" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                <button onclick="showModal(${producto.idProducto}, '${producto.nombreProducto}')" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                     Agregar al Carrito
                 </button>
             </td>
@@ -63,11 +65,6 @@ function buscarProducto() {
     });
 }
 
-// Función para agregar producto al carrito
-function agregarAlCarrito(idProducto) {
-    console.log(`Producto ${idProducto} agregado al carrito`);
-    // ACA VA LA LOGICA PARA AGREGAR AL CARRITO HCERLA
-}
 
 window.agregarAlCarrito = agregarAlCarrito;
 window.buscarProducto = buscarProducto;

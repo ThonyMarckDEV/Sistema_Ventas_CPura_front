@@ -9,6 +9,10 @@
 </head>
 <body class="bg-gray-100 min-h-screen flex flex-col lg:flex-row">
 
+ <!-- Notificación -->
+ <div id="notification" class="hidden fixed top-4 left-1/2 transform -translate-x-1/2 px-4 py-2 text-white font-semibold text-center rounded shadow-md"></div>
+    
+
     <!-- Sidebar -->
     <?php include 'sidebarCLIENTE.php'; ?>
 
@@ -27,12 +31,10 @@
 
         <!-- Tabla de Productos -->
         <div class="bg-white rounded-lg shadow-md p-4 lg:p-6">
+
             <!-- Barra de búsqueda y filtros -->
             <div class="flex flex-col md:flex-row justify-between items-center mb-4 space-y-4 md:space-y-0">
                 <input type="text" id="searchInput" onkeyup="buscarProducto()" placeholder="Buscar" class="w-full md:w-2/3 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <button class="flex items-center space-x-1 text-gray-500 px-4 py-2 border border-gray-300 rounded-lg">
-                    <i class="fas fa-filter"></i> <span>Filtros</span>
-                </button>
             </div>
             
             <!-- Tabla responsive -->
@@ -55,16 +57,23 @@
                 </table>
             </div>
 
-            <!-- Paginación -->
-            <div class="flex flex-col md:flex-row items-center justify-between mt-4 space-y-4 md:space-y-0">
-                <select class="border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option>10</option>
-                    <option>20</option>
-                    <option>30</option>
-                </select>
-            </div>
         </div>
     </div>
+    
+ <!-- Modal agregar carrito -->
+        <div id="modal" class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+        <div class="bg-white p-6 rounded-lg w-80">
+            <h2 id="modalProductName" class="text-xl font-bold mb-4">Producto</h2>
+            <div class="flex items-center justify-center mb-4">
+                <button id="decrementBtn" class="bg-gray-200 px-4 py-2 font-bold">-</button>
+                <input id="cantidadInput" type="text" class="w-12 text-center border mx-2" readonly>
+                <button id="incrementBtn" class="bg-gray-200 px-4 py-2 font-bold">+</button>
+            </div>
+            <button id="addToCartBtn" class="w-full bg-blue-500 text-white font-bold py-2 rounded">Agregar al Carrito</button>
+            <button id="closeModalBtn" class="w-full bg-red-500 text-white font-bold py-2 rounded mt-2">Cerrar</button>
+        </div>
+    </div>
+
 
     <!-- Script para cargar productos -->
     <script type="module" src="../../js/listarProductosCliente.js"></script>

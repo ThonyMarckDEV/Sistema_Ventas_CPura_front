@@ -17,6 +17,12 @@
                 <a href="perfilCliente.php" class="text-gray-700 font-semibold hover:bg-gray-200 hover:text-gray-900 p-2 rounded w-full">Perfil</a>
             </li>
 
+            <li class="flex items-center mb-6">
+                <span class="mr-3 text-gray-500"><i class="fas fa-shopping-cart"></i></span>
+                <a href="carrito.php" class="text-gray-700 font-semibold hover:bg-gray-200 hover:text-gray-900 p-2 rounded w-full">Mi Carrito</a>
+            </li>
+
+            
             <li class="mb-6">
                 <div class="flex items-center justify-between cursor-pointer text-gray-700 font-semibold" onclick="toggleDropdown('catalogoDropdown', 'catalogoArrow')">
                     <span>Catalogo</span>
@@ -33,24 +39,6 @@
                 
             </li>
 
-           
-
-            <li class="mb-6">
-
-                <div class="flex items-center justify-between cursor-pointer text-gray-700 font-semibold" onclick="toggleDropdown('enlacesExternosDropdown', 'enlacesExternosArrow')">
-                    <span>Enlaces Externos</span>
-                    <span id="enlacesExternosArrow" class="text-gray-500 transform transition-transform duration-300"><i class="fas fa-chevron-down"></i></span>
-                </div>
-
-                <ul id="enlacesExternosDropdown" class="pl-8 mt-2 hidden">
-                    <li class="flex items-center">
-                        <a href="#" class="text-gray-600 flex justify-between w-full hover:bg-gray-200 hover:text-gray-900 p-2 rounded cursor-pointer">
-                            <span>WhatsApp</span>
-                        </a>
-                    </li>
-                </ul>
-
-            </li>
 
             <li>
                 <a onclick="logout()" class="flex items-center space-x-2 text-gray-700 hover:bg-gray-200 hover:text-gray-900 p-2 rounded cursor-pointer">

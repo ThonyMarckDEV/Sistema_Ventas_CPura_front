@@ -9,6 +9,9 @@
     </head>
     <body class="bg-gray-100 flex">
 
+    <!-- Notificación -->
+    <div id="notification" style="display: none;"></div>
+
         <!-- Sidebar -->
         <?php include 'sidebarCLIENTE.php'; ?>
 
