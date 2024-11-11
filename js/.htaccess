@@ -18,7 +18,8 @@ RewriteCond %{REQUEST_URI} !/listarProductosCliente.js$ [NC]
 RewriteCond %{REQUEST_URI} !/registerUser.js$ [NC]
 RewriteCond %{REQUEST_URI} !/gestionarProductosCarrito.js$ [NC]
 RewriteCond %{REQUEST_URI} !/agregarCarrito.js$ [NC]
-
+RewriteCond %{REQUEST_URI} !/proceedToCheckout.js$ [NC]
+RewriteCond %{REQUEST_URI} !/pedido.js$ [NC]
 
 # ADMINJS
 RewriteCond %{REQUEST_URI} !/loadingOverlay.js$ [NC]

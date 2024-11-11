@@ -4,7 +4,7 @@ const token = localStorage.getItem("jwt");
 
 
 // Función para cargar los productos del carrito
-function loadCartProducts() {
+export function loadCartProducts() {
     fetch(`${API_BASE_URL}/api/carrito`, {
         method: "GET",
         headers: {
@@ -19,7 +19,6 @@ function loadCartProducts() {
         return response.json();
     })
     .then(data => {
-        console.log("Datos recibidos del carrito:", data); // Añade esta línea
         if (data && data.data) {
             renderCartTable(data.data); // Solo llama a renderCartTable si data está definido
         } else {
@@ -37,7 +36,6 @@ function renderCartTable(products) {
     let total = 0; // Variable para acumular el total del carrito
 
     products.forEach(product => {
-        console.log("Producto:", product); // Depuración
 
         // Verificar y convertir 'precio' y 'cantidad' a número
         const precio = Number(product.precio);
@@ -79,7 +77,6 @@ function renderCartTable(products) {
     const cantidadInputs = document.querySelectorAll(".cantidad-input");
     cantidadInputs.forEach(input => {
         input.addEventListener("change", handleQuantityChange);
-        input.addEventListener("blur", handleQuantityChange);
         input.addEventListener("keypress", function(event) {
             if (event.key === "Enter") {
                 event.preventDefault();
@@ -125,15 +122,35 @@ function updateQuantity(idProducto, cantidad) {
     })
     .then(data => {
         if (data.success) {
+             // Reproducir el sonido success
+             var sonido = new Audio('../../songs/success.mp3'); // Asegúrate de que la ruta sea correcta
+             sonido.play().catch(function(error) {
+                 console.error("Error al reproducir el sonido:", error);
+             });
+             //=============================================================
+            showNotification("Cantidad actualizada exitosamente", "bg-green-500");
             loadCartProducts(); // Recargar el carrito
         } else {
+            // Reproducir el sonido error
+            var sonido = new Audio('../../songs/error.mp3'); // Asegúrate de que la ruta sea correcta
+            sonido.play().catch(function(error) {
+                console.error("Error al reproducir el sonido:", error);
+            });
+            //=============================================================
+           showNotification("Error al actualizar cantidad", "bg-red-500");
             console.error("Error al actualizar cantidad:", data.message);
-            alert("Error al actualizar la cantidad: " + data.message);
         }
     })
     .catch(error => {
         console.error("Error al actualizar cantidad:", error);
-        alert("Hubo un error al actualizar la cantidad. Por favor, intenta nuevamente.");
+        // Reproducir el sonido error
+        var sonido = new Audio('../../songs/error.mp3'); // Asegúrate de que la ruta sea correcta
+        sonido.play().catch(function(error) {
+            console.error("Error al reproducir el sonido:", error);
+        });
+        //=============================================================
+       showNotification("Error al actualizar cantidad", "bg-red-500");
+        console.error("Error al actualizar cantidad:", data.message);
     });
 }
 
@@ -159,15 +176,34 @@ function removeProduct(idProducto) {
     })
     .then(data => {
         if (data.success) {
+             // Reproducir el sonido success
+             var sonido = new Audio('../../songs/success.mp3'); // Asegúrate de que la ruta sea correcta
+             sonido.play().catch(function(error) {
+                 console.error("Error al reproducir el sonido:", error);
+             });
+             //=============================================================
+            showNotification("Producto eliminado exitosamente", "bg-green-500");
             loadCartProducts(); // Recargar el carrito
         } else {
             console.error("Error al eliminar producto:", data.message);
-            alert("Error al eliminar el producto: " + data.message);
+             // Reproducir el sonido error
+        var sonido = new Audio('../../songs/error.mp3'); // Asegúrate de que la ruta sea correcta
+        sonido.play().catch(function(error) {
+            console.error("Error al reproducir el sonido:", error);
+        });
+        //=============================================================
+        showNotification("Error al eliminar producto", "bg-red-500");
         }
     })
     .catch(error => {
         console.error("Error al eliminar producto:", error);
-        alert("Hubo un error al eliminar el producto. Por favor, intenta nuevamente.");
+               // Reproducir el sonido error
+               var sonido = new Audio('../../songs/error.mp3'); // Asegúrate de que la ruta sea correcta
+               sonido.play().catch(function(error) {
+                   console.error("Error al reproducir el sonido:", error);
+               });
+               //=============================================================
+               showNotification("Error al eliminar producto", "bg-red-500");
     });
 }
 

@@ -54,7 +54,7 @@
 
             <!-- Botón de proceder al pago -->
             <div class="mt-6 text-right">
-                <button class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600">Proceder al Pago</button>
+                <button id="checkoutButton" class="bg-blue-500 text-white px-4 py-2 rounded">Hacer Pedido</button>
             </div>
             
         </div>
@@ -63,5 +63,7 @@
 
     <!-- Script para cargar productos -->
     <script type="module" src="../../js/gestionarProductosCarrito.js"></script>
+     <!-- Script para cargar productos -->
+     <script type="module" src="../../js/proceedToCheckout.js"></script>
 </body>
 </html>
