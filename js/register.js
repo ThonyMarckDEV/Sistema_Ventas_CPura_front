@@ -80,6 +80,8 @@ function submitForm() {
                 console.error("Error al reproducir el sonido:", error);
             });
             showNotification("Usuario registrado exitosamente", "bg-green-500");
+             // Ocultar el loader después de la operación
+              document.getElementById("loadingScreen").classList.add("hidden");
             form.reset();
             listUsers(); 
         } else {

@@ -28,6 +28,9 @@ function proceedToCheckout() {
         return;
     }
 
+            // Mostrar el loader al enviar el formulario
+            document.getElementById("loadingScreen").classList.remove("hidden");
+
     fetch(`${API_BASE_URL}/api/pedido`, {
         method: "POST",
         headers: {
@@ -39,8 +42,12 @@ function proceedToCheckout() {
     .then(response => {
         if (!response.ok) {
             return response.json().then(data => {
+                 // Ocultar el loader después de la operación
+             document.getElementById("loadingScreen").classList.add("hidden");
                 throw new Error(data.message || "Error al proceder al pago");
             }).catch(() => {
+                 // Ocultar el loader después de la operación
+             document.getElementById("loadingScreen").classList.add("hidden");
                 throw new Error("Error al proceder al pago");
             });
         }
@@ -48,18 +55,41 @@ function proceedToCheckout() {
     })
     .then(data => {
         if (data.success) {
-            showNotification("Pedido y pago realizados con éxito", "bg-green-500");
+            // Reproducir el sonido success
+            var sonido = new Audio('../../songs/success.mp3'); // Asegúrate de que la ruta sea correcta
+            sonido.play().catch(function(error) {
+                console.error("Error al reproducir el sonido:", error);
+            });
+            //=============================================================
+            showNotification("Pedido realizado con éxito", "bg-green-500");
+             // Ocultar el loader después de la operación
+             document.getElementById("loadingScreen").classList.add("hidden");
             // Abrir la boleta en una nueva ventana
             window.open(`${API_BASE_URL}/boleta/${data.idPedido}`, '_blank');
             // Opcional: Vaciar el carrito en el frontend
             clearCartUI();
         } else {
-            showNotification("Error al proceder al pago", "bg-red-500");
+             // Reproducir el sonido error
+             var sonido = new Audio('../../songs/error.mp3'); // Asegúrate de que la ruta sea correcta
+             sonido.play().catch(function(error) {
+                 console.error("Error al reproducir el sonido:", error);
+             });
+             //=============================================================
+              // Ocultar el loader después de la operación
+              document.getElementById("loadingScreen").classList.add("hidden");           
+            showNotification("Error al proceder al pedido", "bg-red-500");
         }        
     })
     .catch(error => {
-        console.error("Error al proceder al pago:", error);
-        showNotification("Hubo un error al proceder al pago. Intenta nuevamente.", "bg-red-500");
+         // Reproducir el sonido error
+         var sonido = new Audio('../../songs/error.mp3'); // Asegúrate de que la ruta sea correcta
+         sonido.play().catch(function(error) {
+             console.error("Error al reproducir el sonido:", error);
+         });
+         //=============================================================
+          // Ocultar el loader después de la operación
+          document.getElementById("loadingScreen").classList.add("hidden");           
+        showNotification("Error al proceder al pedido", "bg-red-500");
     });
 }
 

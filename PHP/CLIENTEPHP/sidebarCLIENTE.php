@@ -77,6 +77,8 @@
     }
 </script>
 
+  <!-- Loader -->
+  <?php include '../loader.php'; ?>
 
 <!-- Cargar el archivo JavaScript en todas las páginas -->
 <script type="module" src="../../js/checkTokenInterval.js"></script>
