@@ -33,12 +33,13 @@ const pedidosTableBody = document.getElementById('pedidosTableBody');
 const paymentModal = document.getElementById('paymentModal');
 const closeModalButton = document.getElementById('closeModal');
 const cancelPaymentButton = document.getElementById('cancelPayment');
-const proceedToPaymentButton = document.getElementById('proceedToPayment'); // Actualizado el nombre de la variable
+const proceedToPaymentButton = document.getElementById('proceedToPayment');
 const confirmPaymentTypeButton = document.getElementById('confirmPaymentType');
+const closePaymentTypeModalButton = document.getElementById('closePaymentTypeModal');
 const modalPedidoId = document.getElementById('modalPedidoId');
 const modalTotal = document.getElementById('modalTotal');
 const notification = document.getElementById('notification');
-const paymentTypeModal = document.getElementById('paymentTypeModal'); // Actualizado el ID
+const paymentTypeModal = document.getElementById('paymentTypeModal');
 const paymentMethodSelect = document.getElementById('paymentMethod');
 const paymentDetails = document.getElementById('paymentDetails');
 const qrImage = document.getElementById('qrImage');
@@ -111,17 +112,14 @@ function renderPedidos(pedidos) {
         const tdAccion = document.createElement('td');
 
         if (pedido.estado === 'completado') {
-            // Mostrar "Completado" en verde en lugar del botón
             tdAccion.innerHTML = '<span class="text-green-500 font-semibold">Completado</span>';
         } else if (['pendiente de aprobacion', 'aprobando', 'en preparacion', 'enviado'].includes(pedido.estado)) {
-            // Botón "Ver Estado" para pedidos en progreso
             const botonEstado = document.createElement('button');
             botonEstado.textContent = 'Ver Estado';
             botonEstado.className = 'px-4 py-2 bg-gray-500 text-white rounded';
             botonEstado.addEventListener('click', () => abrirEstadoModal(pedido.estado));
             tdAccion.appendChild(botonEstado);
         } else {
-            // Botón "Ver Detalles" para otros casos
             const botonDetalles = document.createElement('button');
             botonDetalles.textContent = 'Ver Detalles';
             botonDetalles.className = 'px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600';
@@ -136,19 +134,15 @@ function renderPedidos(pedidos) {
     });
 }
 
-
 // Función para abrir el modal de estado con línea de tiempo
 function abrirEstadoModal(estadoActual) {
     const estados = ['aprobando', 'en preparacion', 'enviado', 'completado'];
     const timeline = document.getElementById('timeline');
-    timeline.innerHTML = ''; // Limpiar la línea de tiempo anterior
+    timeline.innerHTML = '';
 
-    // Crear la línea de tiempo en base al estado actual
     estados.forEach((estado, index) => {
         const estadoElement = document.createElement('div');
         estadoElement.className = 'flex flex-col items-center';
-
-        // Rellenar el ícono si el estado ha sido alcanzado
         const isActive = estados.indexOf(estadoActual) >= index;
         estadoElement.innerHTML = `
             <div class="w-8 h-8 flex items-center justify-center rounded-full ${isActive ? 'bg-green-500' : 'bg-gray-300'}">
@@ -160,7 +154,6 @@ function abrirEstadoModal(estadoActual) {
         timeline.appendChild(estadoElement);
     });
 
-    // Mostrar el modal
     document.getElementById('estadoModal').classList.remove('hidden');
 }
 
@@ -203,15 +196,29 @@ if (paymentMethodSelect) {
     });
 }
 
+// Validar archivo adjunto
+function validarArchivoAdjunto() {
+    const selectedMethod = paymentMethodSelect.value;
+    const file = comprobanteFileInput.files[0];
+
+    if ((selectedMethod === 'yape' || selectedMethod === 'plin') && !file) {
+        alert('Por favor, adjunte un archivo de comprobante para proceder.');
+        return false;
+    }
+    return true;
+}
+
 // Confirmar el tipo de pago y adjuntar comprobante
 if (confirmPaymentTypeButton) {
     confirmPaymentTypeButton.addEventListener('click', () => {
+        if (!validarArchivoAdjunto()) {
+            return; // Detener si no hay un archivo adjunto
+        }
+
         const selectedMethod = paymentMethodSelect.value;
-        const comprobanteFile = comprobanteFileInput.files[0];
-        
         if (selectedMethod === 'yape' || selectedMethod === 'plin') {
             const formData = new FormData();
-            formData.append('comprobante', comprobanteFile);
+            formData.append('comprobante', comprobanteFileInput.files[0]);
             formData.append('metodo_pago', selectedMethod);
 
             fetch(`${API_BASE_URL}/api/procesar-pago/${pedidoSeleccionado.idPedido}`, {
@@ -223,7 +230,7 @@ if (confirmPaymentTypeButton) {
             }).then(response => response.json()).then(data => {
                 if (data.success) {
                     showNotification('Pago procesado exitosamente.', 'bg-green-500');
-                    paymentTypeModal.classList.add('hidden');
+                    cerrarPaymentTypeModal();
                     fetchPedidos();
                 } else {
                     showNotification(data.message || 'Error al procesar el pago.', 'bg-red-500');
@@ -231,10 +238,27 @@ if (confirmPaymentTypeButton) {
             });
         } else {
             showNotification('Pago en efectivo confirmado', 'bg-green-500');
-            paymentTypeModal.classList.add('hidden');
+            cerrarPaymentTypeModal();
         }
     });
 }
+
+// Función para cerrar el modal de tipo de pago
+function cerrarPaymentTypeModal() {
+    paymentTypeModal.classList.add('hidden');
+}
+
+// Evento para cerrar el modal al hacer clic en el botón "X"
+if (closePaymentTypeModalButton) {
+    closePaymentTypeModalButton.addEventListener('click', cerrarPaymentTypeModal);
+}
+
+// También permite cerrar el modal con la tecla "Escape"
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+        cerrarPaymentTypeModal();
+    }
+});
 
 // Función para renderizar los detalles del pedido en el modal
 function renderDetalles(detalles) {
@@ -244,7 +268,6 @@ function renderDetalles(detalles) {
     detalles.forEach(detalle => {
         const tr = document.createElement('tr');
         
-        // Añadir columnas con los detalles del pedido
         const tdIdDetalle = document.createElement('td');
         tdIdDetalle.textContent = detalle.idDetallePedido;
         tdIdDetalle.className = 'py-2 px-4 border';
@@ -279,17 +302,18 @@ function renderDetalles(detalles) {
     });
 }
 
-// Función para cerrar el modal
+// Función para cerrar el modal de detalles
 function cerrarModal() {
     if (paymentModal) paymentModal.classList.add('hidden');
     pedidoSeleccionado = null;
 }
 
-// Asignar eventos para cerrar el modal si los elementos existen
+// Asignar eventos para cerrar el modal de detalles si los elementos existen
 if (closeModalButton) closeModalButton.addEventListener('click', cerrarModal);
 if (cancelPaymentButton) cancelPaymentButton.addEventListener('click', cerrarModal);
 
 // Inicializar la carga de pedidos al cargar la página
 document.addEventListener('DOMContentLoaded', fetchPedidos);
-// Asignar eventos de cierre al botón de cierre del modal
+
+// Asignar eventos de cierre al botón de cierre del modal de estado
 document.getElementById('closeEstadoModal').addEventListener('click', cerrarEstadoModal);

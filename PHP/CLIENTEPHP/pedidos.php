@@ -92,33 +92,35 @@
 
         
 
-       <!-- Modal de Selección de Tipo de Pago -->
-    <div id="paymentTypeModal" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center">
-        <div class="bg-white rounded-lg p-6 w-80">
-            <h2 class="text-lg font-bold mb-4">Seleccione el Tipo de Pago</h2>
-            
-            <!-- Opciones de Pago -->
-            <select id="paymentMethod" class="w-full mb-4 p-2 border rounded">
-                <option value="" selected disabled>Seleccione el tipo de pago</option>
-                <option value="yape">Yape</option>
-                <option value="plin">Plin</option>
-                <option value="efectivo">Efectivo</option>
-            </select>
-            
-            <!-- Campo para el Comprobante (solo para Yape o Plin) -->
-            <div id="paymentDetails" class="hidden">
-                <!-- La imagen cambiará según el método de pago seleccionado -->
-                <img id="qrImage" src="../../img/yapeqr.jpg" alt="QR" class="w-32 h-32 mx-auto mb-4">
-                <label class="block mb-2">Adjuntar Comprobante:</label>
-                <input type="file" id="comprobanteFile" class="w-full p-2 border rounded">
-            </div>
-            
-            <div class="flex justify-end mt-4">
-                <button id="confirmPaymentType" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Confirmar</button>
-            </div>
+  <!-- Modal de Selección de Tipo de Pago -->
+<div id="paymentTypeModal" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center">
+    <div class="bg-white rounded-lg p-6 w-80 relative">
+        <!-- Botón "X" para cerrar el modal -->
+        <button id="closePaymentTypeModal" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 font-bold text-xl">X</button>
+
+        <h2 class="text-lg font-bold mb-4">Seleccione el Tipo de Pago</h2>
+        
+        <!-- Opciones de Pago -->
+        <select id="paymentMethod" class="w-full mb-4 p-2 border rounded">
+            <option value="" selected disabled>Seleccione el tipo de pago</option>
+            <option value="yape">Yape</option>
+            <option value="plin">Plin</option>
+            <option value="efectivo">Efectivo</option>
+        </select>
+        
+        <!-- Campo para el Comprobante (solo para Yape o Plin) -->
+        <div id="paymentDetails" class="hidden">
+            <img id="qrImage" src="../../img/yapeqr.jpg" alt="QR" class="w-32 h-32 mx-auto mb-4">
+            <label class="block mb-2">Adjuntar Comprobante:</label>
+            <input type="file" id="comprobanteFile" class="w-full p-2 border rounded">
+        </div>
+        
+        <div class="flex justify-end mt-4">
+            <button id="confirmPaymentType" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Confirmar</button>
         </div>
     </div>
-    
+</div>
+
 
         <!-- Modal de Estado -->
         <div id="estadoModal" class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
