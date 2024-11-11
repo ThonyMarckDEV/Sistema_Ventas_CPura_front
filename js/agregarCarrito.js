@@ -1,4 +1,5 @@
 import API_BASE_URL from './urlHelper.js';
+import { actualizarCantidadCarrito } from './contadorCarrito.js';
 
 let selectedProductId = null;
 
@@ -23,13 +24,27 @@ function updateCantidad(increment) {
     cantidadInput.value = cantidad > 0 ? cantidad : 1; // Evitar valores negativos
 }
 
-// Agregar producto al carrito
-async function agregarAlCarrito() {
+// Función para descifrar el JWT y obtener el payload
+function parseJwt(token) {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+
+    return JSON.parse(jsonPayload);
+}
+
+export async function agregarAlCarrito() {
     const token = localStorage.getItem("jwt");
     const cantidad = document.getElementById("cantidadInput").value;
 
-        // Mostrar el loader al enviar el formulario
-        document.getElementById("loadingScreen").classList.remove("hidden");
+    // Extrae el idUsuario desde el token JWT
+    const payload = parseJwt(token);
+    const idUsuario = payload.idUsuario; // Ajusta el nombre de acuerdo a tu payload JWT
+
+    // Mostrar el loader al enviar el formulario
+    document.getElementById("loadingScreen").classList.remove("hidden");
 
     try {
         const response = await fetch(`${API_BASE_URL}/api/agregarCarrito`, {
@@ -40,39 +55,33 @@ async function agregarAlCarrito() {
             },
             body: JSON.stringify({
                 idProducto: selectedProductId,
-                cantidad: cantidad
+                cantidad: cantidad,
+                idUsuario: idUsuario
             })
         });
 
         const data = await response.json();
 
         if (response.ok) {
-            // Reproducir el sonido success
-            var sonido = new Audio('../../songs/success.mp3'); // Asegúrate de que la ruta sea correcta
+            var sonido = new Audio('../../songs/success.mp3');
             sonido.play().catch(function(error) {
                 console.error("Error al reproducir el sonido:", error);
             });
-            //=============================================================
-           showNotification("Productos agregados al carrito exitosamente", "bg-green-500");
+            showNotification("Productos agregados al carrito exitosamente", "bg-green-500");
             hideModal();
-            // Ocultar el loader después de la operación
-             document.getElementById("loadingScreen").classList.add("hidden");
+            actualizarCantidadCarrito();
         } else {
-               // Ocultar el loader después de la operación
-               document.getElementById("loadingScreen").classList.add("hidden");
-             // Reproducir el sonido error
-             var sonido = new Audio('../../songs/error.mp3'); // Asegúrate de que la ruta sea correcta
-             sonido.play().catch(function(error) {
-                 console.error("Error al reproducir el sonido:", error);
-             });
-             //=============================================================
+            var sonido = new Audio('../../songs/error.mp3');
+            sonido.play().catch(function(error) {
+                console.error("Error al reproducir el sonido:", error);
+            });
             showNotification("Error al agregar productos al carrito", "bg-red-500");
         }
     } catch (error) {
-           // Ocultar el loader después de la operación
-           document.getElementById("loadingScreen").classList.add("hidden");
         console.error("Error:", error);
         alert("Error al agregar producto al carrito");
+    } finally {
+        document.getElementById("loadingScreen").classList.add("hidden");
     }
 }
 

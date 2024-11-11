@@ -1,5 +1,5 @@
 import API_BASE_URL from './urlHelper.js';
-
+import { actualizarCantidadPedido } from './contadorPedidos.js'; // Cambiado a plural
 const token = localStorage.getItem("jwt");
 
 // Función para decodificar el JWT y extraer idCarrito y idUsuario
@@ -68,6 +68,7 @@ function proceedToCheckout() {
             window.open(`${API_BASE_URL}/boleta/${data.idPedido}`, '_blank');
             // Opcional: Vaciar el carrito en el frontend
             clearCartUI();
+            actualizarCantidadPedido();
         } else {
              // Reproducir el sonido error
              var sonido = new Audio('../../songs/error.mp3'); // Asegúrate de que la ruta sea correcta

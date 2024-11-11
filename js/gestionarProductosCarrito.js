@@ -1,5 +1,5 @@
 import API_BASE_URL from './urlHelper.js';
-
+import { actualizarCantidadCarrito } from './contadorCarrito.js';
 const token = localStorage.getItem("jwt");
 
 
@@ -130,6 +130,7 @@ function updateQuantity(idProducto, cantidad) {
              //=============================================================
             showNotification("Cantidad actualizada exitosamente", "bg-green-500");
             loadCartProducts(); // Recargar el carrito
+            actualizarCantidadCarrito();
         } else {
             // Reproducir el sonido error
             var sonido = new Audio('../../songs/error.mp3'); // Asegúrate de que la ruta sea correcta
@@ -192,6 +193,7 @@ function removeProduct(idProducto) {
                // Ocultar el loader después de la operación
                document.getElementById("loadingScreen").classList.add("hidden");
             loadCartProducts(); // Recargar el carrito
+            actualizarCantidadCarrito();
         } else {
             console.error("Error al eliminar producto:", data.message);
              // Reproducir el sonido error

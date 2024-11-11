@@ -19,16 +19,20 @@
 
             <li class="flex items-center mb-6">
                 <span class="mr-3 text-gray-500"><i class="fas fa-shopping-cart"></i></span>
-                <a href="carrito.php" class="text-gray-700 font-semibold hover:bg-gray-200 hover:text-gray-900 p-2 rounded w-full">Mi Carrito</a>
+                <a href="carrito.php" class="text-gray-700 font-semibold hover:bg-gray-200 hover:text-gray-900 p-2 rounded w-full">
+                    Mi Carrito <span id="carritoCantidad" class="ml-2 bg-red-500 text-white px-2 rounded-full hidden"></span>
+                </a>
             </li>
 
             
             <li class="flex items-center mb-6">
-                <span class="mr-3 text-gray-500"><i class="fas fa-truck"></i></span> <!-- Cambié el ícono para diferenciarlo -->
-                <a href="pedidos.php" class="text-gray-700 font-semibold hover:bg-gray-200 hover:text-gray-900 p-2 rounded w-full">Mis Pedidos</a>
+                <span class="mr-3 text-gray-500"><i class="fas fa-truck"></i></span>
+                <a href="pedidos.php" class="text-gray-700 font-semibold hover:bg-gray-200 hover:text-gray-900 p-2 rounded w-full">
+                    Mis Pedidos <span id="pedidosCantidad" class="ml-2 bg-red-500 text-white px-2 rounded-full hidden"></span>
+                </a>
             </li>
 
-            
+
             <li class="mb-6">
                 <div class="flex items-center justify-between cursor-pointer text-gray-700 font-semibold" onclick="toggleDropdown('catalogoDropdown', 'catalogoArrow')">
                     <span>Catalogo</span>
@@ -103,3 +107,5 @@
 <?php include '../inactivity.php'; ?>
 <!-- <script Checka inactyividad Usuario></script> -->
 <script type="module" src="../../js/checkInactivity.js"></script>
+<script type="module" src="../../js/contadorCarrito.js"></script>
+<script type="module" src="../../js/contadorPedidos.js"></script>

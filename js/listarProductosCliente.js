@@ -1,5 +1,5 @@
 import API_BASE_URL from './urlHelper.js';
-import { showModal } from './agregarCarrito.js';
+import { agregarAlCarrito  } from './agregarCarrito.js';
 
 
 document.addEventListener("DOMContentLoaded", () => {
