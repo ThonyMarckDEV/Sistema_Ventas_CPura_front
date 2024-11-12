@@ -30,7 +30,7 @@ if (token) {
 
 // Elementos del DOM
 const pedidosTableBody = document.getElementById('pedidosTableBody');
-const paymentModal = document.getElementById('paymentModal');
+const paymentModal = document.getElementById('paymentModalOverlay');
 const closeModalButton = document.getElementById('closeModal');
 const cancelPaymentButton = document.getElementById('cancelPayment');
 const proceedToPaymentButton = document.getElementById('proceedToPayment');
@@ -38,6 +38,7 @@ const confirmPaymentTypeButton = document.getElementById('confirmPaymentType');
 const closePaymentTypeModalButton = document.getElementById('closePaymentTypeModal');
 const modalPedidoId = document.getElementById('modalPedidoId');
 const modalTotal = document.getElementById('modalTotal');
+const modalDireccion = document.getElementById('modalDireccion'); // Elemento para mostrar la dirección
 const notification = document.getElementById('notification');
 const paymentTypeModal = document.getElementById('paymentTypeModal');
 const paymentMethodSelect = document.getElementById('paymentMethod');
@@ -109,40 +110,29 @@ function renderPedidos(pedidos) {
         // Estado
         const tdEstado = document.createElement('td');
         tdEstado.textContent = capitalizeFirstLetter(pedido.estado);
-        // Si el estado es 'completado', mostrar en verde
-        if (pedido.estado.toLowerCase() === 'completado') {
-            tdEstado.className = 'py-3 px-6 border-b text-green-500 font-semibold';
-        } else {
-            tdEstado.className = 'py-3 px-6 border-b';
-        }
+        tdEstado.className = pedido.estado.toLowerCase() === 'completado'
+            ? 'py-3 px-6 border-b text-green-500 font-semibold'
+            : 'py-3 px-6 border-b';
         tr.appendChild(tdEstado);
 
         // Acción
         const tdAccion = document.createElement('td');
-
-        // Estados que requieren ambos botones
         const estadosConAmbosBotones = ['aprobando', 'en preparacion', 'enviado', 'completado'];
 
         if (estadosConAmbosBotones.includes(pedido.estado.toLowerCase())) {
-            // Mostrar ambos botones: "Ver Estado" y "Ver Detalles"
             const botonVerEstado = document.createElement('button');
             botonVerEstado.textContent = 'Ver Estado';
-            // Cambiar color según el estado
-            const botonColor = pedido.estado.toLowerCase() === 'completado' ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-500 hover:bg-gray-600';
-            botonVerEstado.className = `px-4 py-2 ${botonColor} text-white rounded mr-2`;
+            botonVerEstado.className = `px-4 py-2 ${pedido.estado.toLowerCase() === 'completado' ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-500 hover:bg-gray-600'} text-white rounded mr-2`;
             botonVerEstado.addEventListener('click', () => abrirEstadoModal(pedido.estado));
 
             const botonVerDetalles = document.createElement('button');
             botonVerDetalles.textContent = 'Ver Detalles';
-            // Cambiar color según el estado
-            const detallesBotonColor = pedido.estado.toLowerCase() === 'completado' ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-500 hover:bg-blue-600';
-            botonVerDetalles.className = `px-4 py-2 ${detallesBotonColor} text-white rounded`;
+            botonVerDetalles.className = `px-4 py-2 ${pedido.estado.toLowerCase() === 'completado' ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-500 hover:bg-blue-600'} text-white rounded`;
             botonVerDetalles.addEventListener('click', () => abrirModal(pedido));
 
             tdAccion.appendChild(botonVerEstado);
             tdAccion.appendChild(botonVerDetalles);
         } else {
-            // Mostrar solo el botón "Ver Detalles" para otros estados
             const botonDetalles = document.createElement('button');
             botonDetalles.textContent = 'Ver Detalles';
             botonDetalles.className = 'px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600';
@@ -156,72 +146,8 @@ function renderPedidos(pedidos) {
         pedidosTableBody.appendChild(tr);
     });
 }
-// Función para abrir el modal de estado con línea de tiempo
-function abrirEstadoModal(estadoActual) {
-    const estados = ['aprobando', 'en preparacion', 'enviado', 'completado'];
-    const timeline = document.getElementById('timeline');
-    timeline.innerHTML = '';
 
-    estados.forEach((estado, index) => {
-        const estadoElement = document.createElement('div');
-        estadoElement.className = 'flex flex-col items-center';
-        const isActive = estados.indexOf(estadoActual.toLowerCase()) >= index;
-        estadoElement.innerHTML = `
-            <div class="w-8 h-8 flex items-center justify-center rounded-full ${isActive ? 'bg-green-500' : 'bg-gray-300'}">
-                <span class="text-white font-bold">${index + 1}</span>
-            </div>
-            <p class="mt-2 text-sm ${isActive ? 'text-green-600 font-semibold' : 'text-gray-600'}">${capitalizeFirstLetter(estado)}</p>
-            ${index < estados.length - 1 ? '<div class="h-8 border-l-2 border-gray-300"></div>' : ''}
-        `;
-        timeline.appendChild(estadoElement);
-    });
-
-    document.getElementById('estadoModal').classList.remove('hidden');
-}
-
-// Cerrar el modal de estado
-function cerrarEstadoModal() {
-    document.getElementById('estadoModal').classList.add('hidden');
-}
-
-// Función para capitalizar la primera letra de una palabra
-function capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-}
-
-// Función para abrir el modal de detalles del pedido
-async function abrirModal(pedido) {
-    pedidoSeleccionado = pedido;
-    modalPedidoId.textContent = pedido.idPedido;
-    modalTotal.textContent = `S/${Number(pedido.total).toFixed(2)}`;
-
-    // Obtener dirección del pedido usando la API
-    const direccion = await obtenerDireccionPedido(pedido.idPedido);
-    const region = direccion ? direccion.region : 'N/A';
-    const provincia = direccion ? direccion.provincia : 'N/A';
-    const direccionTexto = direccion ? direccion.direccion : 'N/A';
-
-    // Mostrar los detalles de dirección en el modal
-    const modalDireccion = document.getElementById('modalDireccion');
-    modalDireccion.innerHTML = `
-        <p><strong>Región:</strong> ${region}</p>
-        <p><strong>Provincia:</strong> ${provincia}</p>
-        <p><strong>Dirección:</strong> ${direccionTexto}</p>
-    `;
-
-    renderDetalles(pedido.detalles);
-    paymentModal.classList.remove('hidden');
-
-    // Definir los estados que requieren ocultar el botón "Proceder al Pago"
-    const estadosParaOcultarPago = ['aprobando', 'en preparacion', 'enviando', 'completado'];
-    if (estadosParaOcultarPago.includes(pedido.estado.toLowerCase())) {
-        proceedToPaymentButton.style.display = 'none';
-    } else {
-        proceedToPaymentButton.style.display = 'inline-block';
-    }
-}
-
-// Función para obtener la dirección del pedido desde la API
+// Función para obtener la dirección del pedido
 async function obtenerDireccionPedido(idPedido) {
     try {
         const response = await fetch(`${API_BASE_URL}/api/obtenerDireccionPedidoUser/${idPedido}`, {
@@ -232,19 +158,59 @@ async function obtenerDireccionPedido(idPedido) {
             }
         });
         const data = await response.json();
-        return data.success ? data.direccion : null;
+
+        if (data.success) {
+            // Mostrar la dirección en el modal
+            const direccion = data.direccion;
+            modalDireccion.innerHTML = `
+                <p><strong>Región:</strong> ${direccion.region}</p>
+                <p><strong>Provincia:</strong> ${direccion.provincia}</p>
+                <p><strong>Dirección:</strong> ${direccion.direccion}</p>
+            `;
+        } else {
+            showNotification(data.message, 'bg-red-500');
+        }
     } catch (error) {
         console.error('Error al obtener la dirección del pedido:', error);
-        return null;
+        showNotification('Error al obtener la dirección del pedido. Intenta nuevamente.', 'bg-red-500');
     }
 }
 
+// Función para abrir el modal de detalles del pedido
+function abrirModal(pedido) {
+    pedidoSeleccionado = pedido;
+    modalPedidoId.textContent = pedido.idPedido;
+    modalTotal.textContent = `S/${Number(pedido.total).toFixed(2)}`;
+    renderDetalles(pedido.detalles);
 
-// **Agrega este código para que el botón "Proceder al Pago" funcione**
+    // Llamar a la función para obtener y mostrar la dirección
+    obtenerDireccionPedido(pedido.idPedido);
+
+    paymentModal.classList.remove('hidden');
+
+    const estadosParaOcultarPago = ['aprobando', 'en preparacion', 'enviando', 'completado'];
+
+    if (estadosParaOcultarPago.includes(pedido.estado.toLowerCase())) {
+        proceedToPaymentButton.style.display = 'none';
+    } else {
+        proceedToPaymentButton.style.display = 'inline-block';
+    }
+}
+
+// Función para cerrar el modal de detalles
+function cerrarModal() {
+    if (paymentModal) paymentModal.classList.add('hidden');
+    pedidoSeleccionado = null;
+
+    if (proceedToPaymentButton) {
+        proceedToPaymentButton.style.display = 'inline-block';
+    }
+}
+
 if (proceedToPaymentButton) {
     proceedToPaymentButton.addEventListener('click', () => {
-        paymentModal.classList.add('hidden'); // Oculta el modal de detalles del pedido
-        paymentTypeModal.classList.remove('hidden'); // Muestra el modal de tipo de pago
+        paymentModal.classList.add('hidden');
+        paymentTypeModal.classList.remove('hidden');
     });
 }
 
@@ -276,7 +242,7 @@ function validarArchivoAdjunto() {
 if (confirmPaymentTypeButton) {
     confirmPaymentTypeButton.addEventListener('click', () => {
         if (!validarArchivoAdjunto()) {
-            return; // Detener si no hay un archivo adjunto
+            return;
         }
 
         const selectedMethod = paymentMethodSelect.value;
@@ -285,7 +251,6 @@ if (confirmPaymentTypeButton) {
             formData.append('comprobante', comprobanteFileInput.files[0]);
             formData.append('metodo_pago', selectedMethod);
 
-            // Mostrar el loader al enviar el formulario
             document.getElementById("loadingScreen").classList.remove("hidden");
 
             fetch(`${API_BASE_URL}/api/procesar-pago/${pedidoSeleccionado.idPedido}`, {
@@ -296,37 +261,22 @@ if (confirmPaymentTypeButton) {
                 body: formData
             }).then(response => response.json()).then(data => {
                 if (data.success) {
-                    // Reproducir el sonido success
-                    var sonido = new Audio('../../songs/success.mp3'); // Asegúrate de que la ruta sea correcta
-                    sonido.play().catch(function(error) {
-                        console.error("Error al reproducir el sonido:", error);
-                    });
-                    //=============================================================
+                    var sonido = new Audio('../../songs/success.mp3');
+                    sonido.play().catch(error => console.error("Error al reproducir el sonido:", error));
                     showNotification('Pago procesado exitosamente.', 'bg-green-500');
-                    // Ocultar el loader después de la operación
                     document.getElementById("loadingScreen").classList.add("hidden");
                     cerrarPaymentTypeModal();
                     fetchPedidos();
                 } else {
-                    // Reproducir el sonido error
-                    var sonido = new Audio('../../songs/error.mp3'); // Asegúrate de que la ruta sea correcta
-                    sonido.play().catch(function(error) {
-                        console.error("Error al reproducir el sonido:", error);
-                    });
-                    //=============================================================
+                    var sonido = new Audio('../../songs/error.mp3');
+                    sonido.play().catch(error => console.error("Error al reproducir el sonido:", error));
                     showNotification(data.message || 'Error al procesar el pago.', 'bg-red-500');
-                    // Ocultar el loader después de la operación
                     document.getElementById("loadingScreen").classList.add("hidden");
                 }
             });
         } else {
-            // Reproducir el sonido success
-            var sonido = new Audio('../../songs/success.mp3'); // Asegúrate de que la ruta sea correcta
-            sonido.play().catch(function(error) {
-                console.error("Error al reproducir el sonido:", error);
-            });
-            //=============================================================
-            // Ocultar el loader después de la operación
+            var sonido = new Audio('../../songs/success.mp3');
+            sonido.play().catch(error => console.error("Error al reproducir el sonido:", error));
             document.getElementById("loadingScreen").classList.add("hidden");
             showNotification('Pago en efectivo confirmado', 'bg-green-500');
             cerrarPaymentTypeModal();
@@ -393,16 +343,14 @@ function renderDetalles(detalles) {
     });
 }
 
-// Función para cerrar el modal de detalles
-function cerrarModal() {
-    if (paymentModal) paymentModal.classList.add('hidden');
-    pedidoSeleccionado = null;
-
-    // Reiniciar la visibilidad del botón "Proceder al Pago"
-    if (proceedToPaymentButton) {
-        proceedToPaymentButton.style.display = 'inline-block';
-    }
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
 }
+
+function cerrarEstadoModal() {
+    document.getElementById('estadoModal').classList.add('hidden');
+}
+
 
 // Asignar eventos para cerrar el modal de detalles si los elementos existen
 if (closeModalButton) closeModalButton.addEventListener('click', cerrarModal);
@@ -410,6 +358,8 @@ if (cancelPaymentButton) cancelPaymentButton.addEventListener('click', cerrarMod
 
 // Inicializar la carga de pedidos al cargar la página
 document.addEventListener('DOMContentLoaded', fetchPedidos);
+
+
 
 // Asignar eventos de cierre al botón de cierre del modal de estado
 const closeEstadoModalButton = document.getElementById('closeEstadoModal');
