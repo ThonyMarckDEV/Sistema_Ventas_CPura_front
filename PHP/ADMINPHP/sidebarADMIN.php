@@ -11,7 +11,11 @@
                 <span class="mr-3 text-gray-500"><i class="fas fa-home"></i></span>
                 <a href="Admin.php" class="text-gray-700 font-semibold hover:bg-gray-200 hover:text-gray-900 p-2 rounded w-full">Escritorio</a>
             </li>
-
+            
+            <li class="flex items-center mb-6">
+                <span class="mr-3 text-gray-500"><i class="fas fa-box"></i></span>
+                <a href="pedidosAdmin.php" class="text-gray-700 font-semibold hover:bg-gray-200 hover:text-gray-900 p-2 rounded w-full">Pedidos</a>
+            </li>
 
             <li class="mb-6">
                 <div class="flex items-center justify-between cursor-pointer text-gray-700 font-semibold" onclick="toggleDropdown('agregarDropdown', 'usuariosArrow')">
@@ -31,23 +35,6 @@
 
 
             <li class="mb-6">
-                <div class="flex items-center justify-between cursor-pointer text-gray-700 font-semibold" onclick="toggleDropdown('agregarProductosDropdown', 'productosArrow')">
-                    <span>Productos</span>
-                    <span id="productosArrow" class="text-gray-500 transform transition-transform duration-300"><i class="fas fa-chevron-down"></i></span>
-                </div>
-
-                <ul id="agregarProductosDropdown" class="pl-8 mt-2 hidden">
-                    <li class="flex items-center mb-2">
-                        <a href="agregarProducto.php" class="text-gray-600 flex justify-between w-full hover:bg-gray-200 hover:text-gray-900 p-2 rounded cursor-pointer">
-                            <span>Agregar Productos</span>
-                        </a>
-                    </li>
-                </ul>
-            
-            </li>
-
-
-            <li class="mb-6">
                 <div class="flex items-center justify-between cursor-pointer text-gray-700 font-semibold" onclick="toggleDropdown('agregarCategoriaDropdown', 'categoriaArrow')">
                     <span>Categoria</span>
                     <span id="categoriaArrow" class="text-gray-500 transform transition-transform duration-300"><i class="fas fa-chevron-down"></i></span>
@@ -57,6 +44,23 @@
                     <li class="flex items-center mb-2">
                         <a href="agregarCategoria.php" class="text-gray-600 flex justify-between w-full hover:bg-gray-200 hover:text-gray-900 p-2 rounded cursor-pointer">
                             <span>Agregar Categoria</span>
+                        </a>
+                    </li>
+                </ul>
+            
+            </li>
+
+
+            <li class="mb-6">
+                <div class="flex items-center justify-between cursor-pointer text-gray-700 font-semibold" onclick="toggleDropdown('agregarProductosDropdown', 'productosArrow')">
+                    <span>Productos</span>
+                    <span id="productosArrow" class="text-gray-500 transform transition-transform duration-300"><i class="fas fa-chevron-down"></i></span>
+                </div>
+
+                <ul id="agregarProductosDropdown" class="pl-8 mt-2 hidden">
+                    <li class="flex items-center mb-2">
+                        <a href="agregarProducto.php" class="text-gray-600 flex justify-between w-full hover:bg-gray-200 hover:text-gray-900 p-2 rounded cursor-pointer">
+                            <span>Agregar Productos</span>
                         </a>
                     </li>
                 </ul>
