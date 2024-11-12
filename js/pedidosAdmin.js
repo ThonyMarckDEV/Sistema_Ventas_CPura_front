@@ -92,28 +92,33 @@ async function fetchPedidos() {
     }
 }
 
-function renderPedidos(pedidos) {
+async function renderPedidos(pedidos) {
     pedidosContainer.innerHTML = '';
 
-    pedidos.forEach((pedido) => {
+    for (const pedido of pedidos) {
         const pedidoCard = document.createElement('div');
         pedidoCard.className = 'bg-white rounded-lg shadow-md p-6 mb-4';
 
-        // Verificar si pedido.usuario existe
-        const nombres = pedido.usuario && pedido.usuario.nombres ? pedido.usuario.nombres : '';
-        const apellidos = pedido.usuario && pedido.usuario.apellidos ? pedido.usuario.apellidos : '';
-        const nombreCliente = (nombres || apellidos) ? `${nombres} ${apellidos}`.trim() : 'N/A';
+        const nombreCliente = pedido.usuario && pedido.usuario.nombres && pedido.usuario.apellidos
+            ? `${pedido.usuario.nombres} ${pedido.usuario.apellidos}`
+            : 'N/A';
 
-        const direccionCliente = pedido.usuario && pedido.usuario.direccion ? pedido.usuario.direccion : 'N/A';
-        const departamentoCliente = pedido.usuario && pedido.usuario.departamento ? pedido.usuario.departamento : 'N/A';
+        // Llamada a la API para obtener dirección
+        const direccion = await obtenerDireccionPedido(pedido.idPedido);
+        const region = direccion ? direccion.region : 'N/A';
+        const provincia = direccion ? direccion.provincia : 'N/A';
+        const direccionTexto = direccion ? direccion.direccion : 'N/A';
+        const latitud = direccion ? direccion.latitud : null;
+        const longitud = direccion ? direccion.longitud : null;
 
         // Información del pedido
         const pedidoInfo = document.createElement('div');
         pedidoInfo.innerHTML = `
             <h2 class="text-xl font-bold mb-2">Pedido ID: ${pedido.idPedido}</h2>
             <p><strong>Cliente:</strong> ${nombreCliente}</p>
-            <p><strong>Dirección:</strong> ${direccionCliente}</p>
-            <p><strong>Departamento:</strong> ${departamentoCliente}</p>
+            <p><strong>Región:</strong> ${region}</p>
+            <p><strong>Provincia:</strong> ${provincia}</p>
+            <p><strong>Dirección:</strong> ${direccionTexto}</p>
             <p><strong>Total:</strong> S/${Number(pedido.total).toFixed(2)}</p>
             <p><strong>Estado:</strong> ${capitalizeFirstLetter(pedido.estado)}</p>
         `;
@@ -122,62 +127,73 @@ function renderPedidos(pedidos) {
         const actionButtons = document.createElement('div');
         actionButtons.className = 'mt-4 flex space-x-4';
 
+        // Botón "Ver Detalles"
         const viewDetailsButton = document.createElement('button');
         viewDetailsButton.textContent = 'Ver Detalles';
         viewDetailsButton.className = 'px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600';
         viewDetailsButton.addEventListener('click', () => viewOrderDetails(pedido));
 
+        // Botón "Ver Pago"
         const viewPaymentButton = document.createElement('button');
         viewPaymentButton.textContent = 'Ver Pago';
         viewPaymentButton.className = 'px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600';
         viewPaymentButton.addEventListener('click', () => viewPaymentInfo(pedido));
 
+        // Botón "Cambiar Estado del Pedido"
         const changeOrderStatusButton = document.createElement('button');
         changeOrderStatusButton.textContent = 'Cambiar Estado del Pedido';
         changeOrderStatusButton.className = 'px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600';
+        changeOrderStatusButton.addEventListener('click', () => changeOrderStatus(pedido));
 
-        // Botón para eliminar pedido
+        // Botón "Ver Mapa"
+        const viewMapButton = document.createElement('button');
+        viewMapButton.textContent = 'Ver Mapa';
+        viewMapButton.className = 'px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600';
+        if (latitud && longitud) {
+            viewMapButton.addEventListener('click', () => {
+                window.open(`https://maps.google.com/?q=${latitud},${longitud}`, '_blank');
+            });
+        } else {
+            viewMapButton.disabled = true;
+            viewMapButton.classList.add('opacity-50', 'cursor-not-allowed');
+        }
+
+        // Botón "Eliminar Pedido"
         const deleteOrderButton = document.createElement('button');
         deleteOrderButton.textContent = 'Eliminar Pedido';
         deleteOrderButton.className = 'px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600';
         deleteOrderButton.addEventListener('click', () => deleteOrder(pedido));
 
-        // Obtener el estado del pago asociado
+        // Verificar el estado del pago y habilitar o deshabilitar los botones según sea necesario
         let estadoPago = 'pendiente'; // Valor por defecto
         if (pedido.pagos && pedido.pagos.length > 0) {
             estadoPago = pedido.pagos[0].estado_pago.toLowerCase();
         }
 
-        // Ajustar la habilitación de los botones según el estado del pago
+        // Habilitar/deshabilitar botones en función del estado de pago
         if (estadoPago === 'completado') {
-            // Pago completado
-
-            // Habilitar "Cambiar Estado del Pedido"
-            changeOrderStatusButton.disabled = false;
-            changeOrderStatusButton.classList.remove('opacity-50', 'cursor-not-allowed');
-            changeOrderStatusButton.addEventListener('click', () => changeOrderStatus(pedido));
-
+            changeOrderStatusButton.disabled = false; // Habilitar "Cambiar Estado del Pedido"
+            viewPaymentButton.disabled = true; // Deshabilitar "Cambiar Estado de Pago"
+            viewPaymentButton.classList.add('opacity-50', 'cursor-not-allowed');
         } else {
-            // Pago pendiente
-
-            // Deshabilitar "Cambiar Estado del Pedido"
-            changeOrderStatusButton.disabled = true;
+            changeOrderStatusButton.disabled = true; // Deshabilitar "Cambiar Estado del Pedido"
             changeOrderStatusButton.classList.add('opacity-50', 'cursor-not-allowed');
-            // Remover evento para prevenir clics
-            changeOrderStatusButton.onclick = null;
         }
 
+        // Agregar todos los botones al contenedor de botones
         actionButtons.appendChild(viewDetailsButton);
         actionButtons.appendChild(viewPaymentButton);
         actionButtons.appendChild(changeOrderStatusButton);
+        actionButtons.appendChild(viewMapButton);
         actionButtons.appendChild(deleteOrderButton);
 
+        // Agregar información del pedido y botones al contenedor del pedido
         pedidoCard.appendChild(pedidoInfo);
         pedidoCard.appendChild(actionButtons);
-
         pedidosContainer.appendChild(pedidoCard);
-    });
+    }
 }
+
 
 function deleteOrder(pedido) {
     if (confirm(`¿Estás seguro de que deseas eliminar el pedido ${pedido.idPedido}? Esta acción no se puede deshacer.`)) {
@@ -208,31 +224,32 @@ function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-function viewOrderDetails(pedido) {
-    // Limpiar el contenido anterior
+async function viewOrderDetails(pedido) {
     orderDetailsContent.innerHTML = '';
 
-    // Verificar si pedido.usuario existe
-    const nombres = pedido.usuario && pedido.usuario.nombres ? pedido.usuario.nombres : '';
-    const apellidos = pedido.usuario && pedido.usuario.apellidos ? pedido.usuario.apellidos : '';
-    const nombreCliente = (nombres || apellidos) ? `${nombres} ${apellidos}`.trim() : 'N/A';
+    const nombreCliente = pedido.usuario && pedido.usuario.nombres && pedido.usuario.apellidos
+        ? `${pedido.usuario.nombres} ${pedido.usuario.apellidos}`
+        : 'N/A';
 
-    const direccionCliente = pedido.usuario && pedido.usuario.direccion ? pedido.usuario.direccion : 'N/A';
-    const departamentoCliente = pedido.usuario && pedido.usuario.departamento ? pedido.usuario.departamento : 'N/A';
+    // Obtener dirección del pedido
+    const direccion = await obtenerDireccionPedido(pedido.idPedido);
+    const region = direccion ? direccion.region : 'N/A';
+    const provincia = direccion ? direccion.provincia : 'N/A';
+    const direccionTexto = direccion ? direccion.direccion : 'N/A';
 
     // Mostrar la información del pedido
     const pedidoInfo = document.createElement('div');
     pedidoInfo.innerHTML = `
         <p><strong>ID Pedido:</strong> ${pedido.idPedido}</p>
         <p><strong>Cliente:</strong> ${nombreCliente}</p>
-        <p><strong>Dirección:</strong> ${direccionCliente}</p>
-        <p><strong>Departamento:</strong> ${departamentoCliente}</p>
+        <p><strong>Región:</strong> ${region}</p>
+        <p><strong>Provincia:</strong> ${provincia}</p>
+        <p><strong>Dirección:</strong> ${direccionTexto}</p>
         <p><strong>Total:</strong> S/${Number(pedido.total).toFixed(2)}</p>
         <p><strong>Estado:</strong> ${capitalizeFirstLetter(pedido.estado)}</p>
         <h3 class="text-lg font-bold mt-4 mb-2">Detalles:</h3>
     `;
 
-    // Crear una tabla con los detalles del pedido
     const detallesTable = document.createElement('table');
     detallesTable.className = 'min-w-full bg-white rounded-lg overflow-hidden';
 
@@ -262,11 +279,9 @@ function viewOrderDetails(pedido) {
     });
 
     detallesTable.appendChild(tbody);
-
     orderDetailsContent.appendChild(pedidoInfo);
     orderDetailsContent.appendChild(detallesTable);
 
-    // Mostrar el modal
     orderDetailsModal.classList.remove('hidden');
 }
 
@@ -279,18 +294,13 @@ if (closeOrderDetailsModalButton) {
 
 // Función para ver información de pago
 function viewPaymentInfo(pedido) {
-    // Limpiar el contenido anterior
     paymentInfoContent.innerHTML = '';
 
-    // Verificar si hay información de pago
     if (pedido.pagos && pedido.pagos.length > 0) {
         const pago = pedido.pagos[0];
-
-        // Construir la URL al comprobante de pago
         const rutaComprobante = pago.ruta_comprobante;
         const comprobanteURL = `${API_BASE_URL}/storage/${rutaComprobante}`;
 
-        // Mostrar la información del pago
         const pagoInfo = document.createElement('div');
         pagoInfo.innerHTML = `
             <p><strong>ID Pago:</strong> ${pago.idPago}</p>
@@ -300,25 +310,19 @@ function viewPaymentInfo(pedido) {
             <p><strong>Comprobante:</strong></p>
         `;
 
-        // Mostrar la imagen del comprobante en tamaño pequeño
         const comprobanteImg = document.createElement('img');
         comprobanteImg.src = comprobanteURL;
         comprobanteImg.alt = 'Comprobante de Pago';
         comprobanteImg.className = 'mt-2 mb-4 max-w-full h-auto cursor-pointer';
-        comprobanteImg.style.maxWidth = '200px'; // Ajusta el tamaño máximo de la imagen
+        comprobanteImg.style.maxWidth = '200px';
         comprobanteImg.style.maxHeight = '200px';
-
-        // Añadir evento para abrir el modal al hacer clic en la imagen
         comprobanteImg.addEventListener('click', () => {
             openImageModal(comprobanteURL);
         });
 
-        // Añadir la imagen al contenido del modal
         pagoInfo.appendChild(comprobanteImg);
-
         paymentInfoContent.appendChild(pagoInfo);
 
-        // Agregar el combobox para cambiar el estado del pago
         const estadoPagoDiv = document.createElement('div');
         estadoPagoDiv.innerHTML = `
             <label for="paymentStatusSelect" class="block mb-2">Cambiar Estado de Pago:</label>
@@ -328,20 +332,11 @@ function viewPaymentInfo(pedido) {
             </select>
         `;
 
-        // Botón para cambiar estado del pago
         const changePaymentStatusButton = document.createElement('button');
         changePaymentStatusButton.textContent = 'Cambiar Estado de Pago';
         changePaymentStatusButton.className = 'mt-4 px-4 py-2 bg-yellow-500 text-white rounded';
-
-        if (pago.estado_pago.toLowerCase() === 'completado') {
-            // Deshabilitar el botón si el estado es "completado"
-            changePaymentStatusButton.disabled = true;
-            changePaymentStatusButton.classList.add('opacity-50', 'cursor-not-allowed');
-        } else {
-            // Habilitar el botón y agregar el evento
-            changePaymentStatusButton.disabled = false;
-            changePaymentStatusButton.addEventListener('click', () => confirmChangePaymentStatus(pago));
-        }
+        changePaymentStatusButton.disabled = pago.estado_pago.toLowerCase() === 'completado';
+        changePaymentStatusButton.addEventListener('click', () => confirmChangePaymentStatus(pago));
 
         paymentInfoContent.appendChild(estadoPagoDiv);
         paymentInfoContent.appendChild(changePaymentStatusButton);
@@ -350,15 +345,12 @@ function viewPaymentInfo(pedido) {
         paymentInfoContent.innerHTML = '<p>No hay información de pago para este pedido.</p>';
     }
 
-    // Mostrar el modal
     paymentInfoModal.classList.remove('hidden');
 }
 
 // Función para abrir el modal de la imagen
 function openImageModal(url) {
-    // Establecer la fuente de la imagen en el modal
     imageModalContent.src = url;
-    // Mostrar el modal
     imageModal.classList.remove('hidden');
 }
 
@@ -369,7 +361,6 @@ if (closeImageModalButton) {
     });
 }
 
-// Cerrar el modal al hacer clic fuera de la imagen
 imageModal.addEventListener('click', (event) => {
     if (event.target === imageModal) {
         imageModal.classList.add('hidden');
@@ -389,21 +380,20 @@ function confirmChangePaymentStatus(pago) {
     const newStatus = paymentStatusSelect.value;
 
     if (newStatus && newStatus !== pago.estado_pago.toLowerCase()) {
-        // Enviar la actualización al servidor
         fetch(`${API_BASE_URL}/api/admin/pagos/${pago.idPago}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify({ estado_pago: newStatus, idPedido: pago.idPedido }) // Enviamos el idPedido para descontar stock
+            body: JSON.stringify({ estado_pago: newStatus, idPedido: pago.idPedido })
         })
         .then(response => response.json())
         .then(data => {
             if (data.success) {
                 showNotification('Estado de pago actualizado', 'bg-green-500');
                 paymentInfoModal.classList.add('hidden');
-                fetchPedidos(); // Actualizar la lista de pedidos
+                fetchPedidos(); 
             } else {
                 showNotification(data.message, 'bg-red-500');
             }
@@ -418,13 +408,9 @@ function confirmChangePaymentStatus(pago) {
 // Función para cambiar el estado del pedido
 function changeOrderStatus(pedido) {
     selectedPedido = pedido;
-    // Limpiar opciones previas
     orderStatusSelect.innerHTML = '';
-
-    // Estados posibles
     const estados = ['en preparacion', 'enviado', 'completado'];
 
-    // Agregar opciones al select
     estados.forEach(estado => {
         const option = document.createElement('option');
         option.value = estado;
@@ -435,7 +421,6 @@ function changeOrderStatus(pedido) {
         orderStatusSelect.appendChild(option);
     });
 
-    // Mostrar el modal
     changeOrderStatusModal.classList.remove('hidden');
 }
 
@@ -451,7 +436,6 @@ if (confirmOrderStatusButton) {
     confirmOrderStatusButton.addEventListener('click', () => {
         const newEstado = orderStatusSelect.value;
         if (newEstado && newEstado !== selectedPedido.estado.toLowerCase()) {
-            // Enviar la actualización al servidor
             fetch(`${API_BASE_URL}/api/admin/pedidos/${selectedPedido.idPedido}`, {
                 method: 'PUT',
                 headers: {
@@ -465,7 +449,7 @@ if (confirmOrderStatusButton) {
                 if (data.success) {
                     showNotification('Estado del pedido actualizado', 'bg-green-500');
                     changeOrderStatusModal.classList.add('hidden');
-                    fetchPedidos(); // Actualizar la lista de pedidos
+                    fetchPedidos();
                 } else {
                     showNotification(data.message, 'bg-red-500');
                 }
@@ -478,6 +462,29 @@ if (confirmOrderStatusButton) {
             changeOrderStatusModal.classList.add('hidden');
         }
     });
+}
+
+async function obtenerDireccionPedido(idPedido) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/obtenerDireccionPedido/${idPedido}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        const data = await response.json();
+
+        if (data.success) {
+            return data.direccion;
+        } else {
+            console.error(data.message);
+            return null;
+        }
+    } catch (error) {
+        console.error('Error al obtener la dirección del pedido:', error);
+        return null;
+    }
 }
 
 // Inicializar la carga de pedidos al cargar la página

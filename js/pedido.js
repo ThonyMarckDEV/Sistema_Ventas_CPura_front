@@ -189,23 +189,56 @@ function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-// Mostrar el modal de detalles del pedido
-function abrirModal(pedido) {
+// Función para abrir el modal de detalles del pedido
+async function abrirModal(pedido) {
     pedidoSeleccionado = pedido;
     modalPedidoId.textContent = pedido.idPedido;
     modalTotal.textContent = `S/${Number(pedido.total).toFixed(2)}`;
+
+    // Obtener dirección del pedido usando la API
+    const direccion = await obtenerDireccionPedido(pedido.idPedido);
+    const region = direccion ? direccion.region : 'N/A';
+    const provincia = direccion ? direccion.provincia : 'N/A';
+    const direccionTexto = direccion ? direccion.direccion : 'N/A';
+
+    // Mostrar los detalles de dirección en el modal
+    const modalDireccion = document.getElementById('modalDireccion');
+    modalDireccion.innerHTML = `
+        <p><strong>Región:</strong> ${region}</p>
+        <p><strong>Provincia:</strong> ${provincia}</p>
+        <p><strong>Dirección:</strong> ${direccionTexto}</p>
+    `;
+
     renderDetalles(pedido.detalles);
     paymentModal.classList.remove('hidden');
 
     // Definir los estados que requieren ocultar el botón "Proceder al Pago"
     const estadosParaOcultarPago = ['aprobando', 'en preparacion', 'enviando', 'completado'];
-
     if (estadosParaOcultarPago.includes(pedido.estado.toLowerCase())) {
         proceedToPaymentButton.style.display = 'none';
     } else {
         proceedToPaymentButton.style.display = 'inline-block';
     }
 }
+
+// Función para obtener la dirección del pedido desde la API
+async function obtenerDireccionPedido(idPedido) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/obtenerDireccionPedidoUser/${idPedido}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        const data = await response.json();
+        return data.success ? data.direccion : null;
+    } catch (error) {
+        console.error('Error al obtener la dirección del pedido:', error);
+        return null;
+    }
+}
+
 
 // **Agrega este código para que el botón "Proceder al Pago" funcione**
 if (proceedToPaymentButton) {

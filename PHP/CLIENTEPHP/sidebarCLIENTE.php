@@ -12,10 +12,7 @@
                 <a href="Cliente.php" class="text-gray-700 font-semibold hover:bg-gray-200 hover:text-gray-900 p-2 rounded w-full">Escritorio</a>
             </li>
 
-            <li class="flex items-center mb-6">
-                <span class="mr-3 text-gray-500"><i class="fas fa-user"></i></span>
-                <a href="perfilCliente.php" class="text-gray-700 font-semibold hover:bg-gray-200 hover:text-gray-900 p-2 rounded w-full">Perfil</a>
-            </li>
+    
 
             <li class="flex items-center mb-6">
                 <span class="mr-3 text-gray-500"><i class="fas fa-shopping-cart"></i></span>
@@ -31,6 +28,32 @@
                     Mis Pedidos <span id="pedidosCantidad" class="ml-2 bg-red-500 text-white px-2 rounded-full hidden"></span>
                 </a>
             </li>
+
+
+            <li class="mb-6">
+
+                    <div class="flex items-center justify-between cursor-pointer text-gray-700 font-semibold" onclick="toggleDropdown('direccionesDropdown', 'direccionArrow')">
+                    <span>Direccion</span>
+                    <span id="direccionArrow" class="text-gray-500 transform transition-transform duration-300"><i class="fas fa-chevron-down"></i></span>
+                    </div>
+
+                    <ul id="direccionesDropdown" class="pl-8 mt-2 hidden">
+
+                    <li class="flex items-center mb-2">
+                        <a href="agregarDireccion.php" class="text-gray-600 flex justify-between w-full hover:bg-gray-200 hover:text-gray-900 p-2 rounded cursor-pointer">
+                            <span>Agregar Direccion</span>
+                        </a>
+                    </li>
+
+                    <li class="flex items-center mb-2">
+                        <a href="misDirecciones.php" class="text-gray-600 flex justify-between w-full hover:bg-gray-200 hover:text-gray-900 p-2 rounded cursor-pointer">
+                            <span>Mis Direcciones</span>
+                        </a>
+                    </li>
+
+                    </ul>
+
+                </li>
 
 
             <li class="mb-6">

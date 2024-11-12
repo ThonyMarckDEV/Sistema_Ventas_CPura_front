@@ -107,7 +107,14 @@
 <div id="imageModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 hidden z-50">
     <div class="relative">
         <button id="closeImageModal" class="absolute top-2 right-2 text-white text-3xl font-bold focus:outline-none">&times;</button>
-        <img id="imageModalContent" src="" alt="Comprobante de Pago" class="max-w-full max-h-screen">
+        <img id="imageModalContent" src="" alt="Comprobante de Pago" class="max-w-full h-[90vh]">
+    </div>
+</div>
+
+<div id="mapModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+    <div class="bg-white rounded-lg shadow-lg p-4 max-w-lg w-full">
+        <div id="map" style="height: 300px; width: 100%;"></div>
+        <button onclick="closeMapModal()" class="mt-4 px-4 py-2 bg-red-500 text-white rounded">Cerrar</button>
     </div>
 </div>
 
