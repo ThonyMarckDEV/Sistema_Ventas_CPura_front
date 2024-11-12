@@ -94,32 +94,55 @@ function renderPedidos(pedidos) {
     pedidos.forEach((pedido) => {
         const tr = document.createElement('tr');
 
+        // ID Pedido
         const tdIdPedido = document.createElement('td');
         tdIdPedido.textContent = pedido.idPedido;
         tdIdPedido.className = 'py-3 px-6 border-b';
         tr.appendChild(tdIdPedido);
 
+        // Total
         const tdTotal = document.createElement('td');
         tdTotal.textContent = `S/${Number(pedido.total).toFixed(2)}`;
         tdTotal.className = 'py-3 px-6 border-b';
         tr.appendChild(tdTotal);
 
+        // Estado
         const tdEstado = document.createElement('td');
         tdEstado.textContent = capitalizeFirstLetter(pedido.estado);
-        tdEstado.className = 'py-3 px-6 border-b';
+        // Si el estado es 'completado', mostrar en verde
+        if (pedido.estado.toLowerCase() === 'completado') {
+            tdEstado.className = 'py-3 px-6 border-b text-green-500 font-semibold';
+        } else {
+            tdEstado.className = 'py-3 px-6 border-b';
+        }
         tr.appendChild(tdEstado);
 
+        // Acción
         const tdAccion = document.createElement('td');
 
-        if (pedido.estado === 'completado') {
-            tdAccion.innerHTML = '<span class="text-green-500 font-semibold">Completado</span>';
-        } else if (['pendiente de aprobacion', 'aprobando', 'en preparacion', 'enviado'].includes(pedido.estado)) {
-            const botonEstado = document.createElement('button');
-            botonEstado.textContent = 'Ver Estado';
-            botonEstado.className = 'px-4 py-2 bg-gray-500 text-white rounded';
-            botonEstado.addEventListener('click', () => abrirEstadoModal(pedido.estado));
-            tdAccion.appendChild(botonEstado);
+        // Estados que requieren ambos botones
+        const estadosConAmbosBotones = ['aprobando', 'en preparacion', 'enviado', 'completado'];
+
+        if (estadosConAmbosBotones.includes(pedido.estado.toLowerCase())) {
+            // Mostrar ambos botones: "Ver Estado" y "Ver Detalles"
+            const botonVerEstado = document.createElement('button');
+            botonVerEstado.textContent = 'Ver Estado';
+            // Cambiar color según el estado
+            const botonColor = pedido.estado.toLowerCase() === 'completado' ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-500 hover:bg-gray-600';
+            botonVerEstado.className = `px-4 py-2 ${botonColor} text-white rounded mr-2`;
+            botonVerEstado.addEventListener('click', () => abrirEstadoModal(pedido.estado));
+
+            const botonVerDetalles = document.createElement('button');
+            botonVerDetalles.textContent = 'Ver Detalles';
+            // Cambiar color según el estado
+            const detallesBotonColor = pedido.estado.toLowerCase() === 'completado' ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-500 hover:bg-blue-600';
+            botonVerDetalles.className = `px-4 py-2 ${detallesBotonColor} text-white rounded`;
+            botonVerDetalles.addEventListener('click', () => abrirModal(pedido));
+
+            tdAccion.appendChild(botonVerEstado);
+            tdAccion.appendChild(botonVerDetalles);
         } else {
+            // Mostrar solo el botón "Ver Detalles" para otros estados
             const botonDetalles = document.createElement('button');
             botonDetalles.textContent = 'Ver Detalles';
             botonDetalles.className = 'px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600';
@@ -133,7 +156,6 @@ function renderPedidos(pedidos) {
         pedidosTableBody.appendChild(tr);
     });
 }
-
 // Función para abrir el modal de estado con línea de tiempo
 function abrirEstadoModal(estadoActual) {
     const estados = ['aprobando', 'en preparacion', 'enviado', 'completado'];
@@ -143,7 +165,7 @@ function abrirEstadoModal(estadoActual) {
     estados.forEach((estado, index) => {
         const estadoElement = document.createElement('div');
         estadoElement.className = 'flex flex-col items-center';
-        const isActive = estados.indexOf(estadoActual) >= index;
+        const isActive = estados.indexOf(estadoActual.toLowerCase()) >= index;
         estadoElement.innerHTML = `
             <div class="w-8 h-8 flex items-center justify-center rounded-full ${isActive ? 'bg-green-500' : 'bg-gray-300'}">
                 <span class="text-white font-bold">${index + 1}</span>
@@ -174,13 +196,22 @@ function abrirModal(pedido) {
     modalTotal.textContent = `S/${Number(pedido.total).toFixed(2)}`;
     renderDetalles(pedido.detalles);
     paymentModal.classList.remove('hidden');
+
+    // Definir los estados que requieren ocultar el botón "Proceder al Pago"
+    const estadosParaOcultarPago = ['aprobando', 'en preparacion', 'enviando', 'completado'];
+
+    if (estadosParaOcultarPago.includes(pedido.estado.toLowerCase())) {
+        proceedToPaymentButton.style.display = 'none';
+    } else {
+        proceedToPaymentButton.style.display = 'inline-block';
+    }
 }
 
-// Mostrar el modal de tipo de pago al hacer clic en "Proceder al Pago"
+// **Agrega este código para que el botón "Proceder al Pago" funcione**
 if (proceedToPaymentButton) {
     proceedToPaymentButton.addEventListener('click', () => {
-        paymentModal.classList.add('hidden');
-        paymentTypeModal.classList.remove('hidden');
+        paymentModal.classList.add('hidden'); // Oculta el modal de detalles del pedido
+        paymentTypeModal.classList.remove('hidden'); // Muestra el modal de tipo de pago
     });
 }
 
@@ -222,7 +253,7 @@ if (confirmPaymentTypeButton) {
             formData.append('metodo_pago', selectedMethod);
 
             // Mostrar el loader al enviar el formulario
-        document.getElementById("loadingScreen").classList.remove("hidden");
+            document.getElementById("loadingScreen").classList.remove("hidden");
 
             fetch(`${API_BASE_URL}/api/procesar-pago/${pedidoSeleccionado.idPedido}`, {
                 method: 'POST',
@@ -232,38 +263,38 @@ if (confirmPaymentTypeButton) {
                 body: formData
             }).then(response => response.json()).then(data => {
                 if (data.success) {
-                            // Reproducir el sonido success
+                    // Reproducir el sonido success
                     var sonido = new Audio('../../songs/success.mp3'); // Asegúrate de que la ruta sea correcta
                     sonido.play().catch(function(error) {
                         console.error("Error al reproducir el sonido:", error);
                     });
                     //=============================================================
-                            showNotification('Pago procesado exitosamente.', 'bg-green-500');
-                            // Ocultar el loader después de la operación
+                    showNotification('Pago procesado exitosamente.', 'bg-green-500');
+                    // Ocultar el loader después de la operación
                     document.getElementById("loadingScreen").classList.add("hidden");
-                            cerrarPaymentTypeModal();
-                            fetchPedidos();
+                    cerrarPaymentTypeModal();
+                    fetchPedidos();
                 } else {
-                        // Reproducir el sonido error
-                        var sonido = new Audio('../../songs/error.mp3'); // Asegúrate de que la ruta sea correcta
-                        sonido.play().catch(function(error) {
-                            console.error("Error al reproducir el sonido:", error);
-                        });
-                        //=============================================================
+                    // Reproducir el sonido error
+                    var sonido = new Audio('../../songs/error.mp3'); // Asegúrate de que la ruta sea correcta
+                    sonido.play().catch(function(error) {
+                        console.error("Error al reproducir el sonido:", error);
+                    });
+                    //=============================================================
                     showNotification(data.message || 'Error al procesar el pago.', 'bg-red-500');
-                         // Ocultar el loader después de la operación
+                    // Ocultar el loader después de la operación
                     document.getElementById("loadingScreen").classList.add("hidden");
                 }
             });
         } else {
-                  // Reproducir el sonido success
-                  var sonido = new Audio('../../songs/success.mp3'); // Asegúrate de que la ruta sea correcta
-                  sonido.play().catch(function(error) {
-                      console.error("Error al reproducir el sonido:", error);
-                  });
-                  //=============================================================
-                    // Ocultar el loader después de la operación
-                    document.getElementById("loadingScreen").classList.add("hidden");
+            // Reproducir el sonido success
+            var sonido = new Audio('../../songs/success.mp3'); // Asegúrate de que la ruta sea correcta
+            sonido.play().catch(function(error) {
+                console.error("Error al reproducir el sonido:", error);
+            });
+            //=============================================================
+            // Ocultar el loader después de la operación
+            document.getElementById("loadingScreen").classList.add("hidden");
             showNotification('Pago en efectivo confirmado', 'bg-green-500');
             cerrarPaymentTypeModal();
         }
@@ -333,6 +364,11 @@ function renderDetalles(detalles) {
 function cerrarModal() {
     if (paymentModal) paymentModal.classList.add('hidden');
     pedidoSeleccionado = null;
+
+    // Reiniciar la visibilidad del botón "Proceder al Pago"
+    if (proceedToPaymentButton) {
+        proceedToPaymentButton.style.display = 'inline-block';
+    }
 }
 
 // Asignar eventos para cerrar el modal de detalles si los elementos existen
@@ -343,4 +379,7 @@ if (cancelPaymentButton) cancelPaymentButton.addEventListener('click', cerrarMod
 document.addEventListener('DOMContentLoaded', fetchPedidos);
 
 // Asignar eventos de cierre al botón de cierre del modal de estado
-document.getElementById('closeEstadoModal').addEventListener('click', cerrarEstadoModal);
+const closeEstadoModalButton = document.getElementById('closeEstadoModal');
+if (closeEstadoModalButton) {
+    closeEstadoModalButton.addEventListener('click', cerrarEstadoModal);
+}

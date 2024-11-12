@@ -104,6 +104,10 @@ function handleQuantityChange(event) {
 
 // Función para actualizar la cantidad de un producto
 function updateQuantity(idProducto, cantidad) {
+
+    // Mostrar el loader al enviar el formulario
+    document.getElementById("loadingScreen").classList.remove("hidden");
+
     fetch(`${API_BASE_URL}/api/carrito_detalle/${idProducto}`, {
         method: "PUT",
         headers: {
@@ -115,6 +119,8 @@ function updateQuantity(idProducto, cantidad) {
     .then(response => {
         if (!response.ok) {
             return response.json().then(data => {
+                // Ocultar el loader después de la operación
+               document.getElementById("loadingScreen").classList.add("hidden");
                 throw new Error(data.message || "Error al actualizar cantidad");
             });
         }
@@ -131,6 +137,8 @@ function updateQuantity(idProducto, cantidad) {
             showNotification("Cantidad actualizada exitosamente", "bg-green-500");
             loadCartProducts(); // Recargar el carrito
             actualizarCantidadCarrito();
+            // Ocultar el loader después de la operación
+            document.getElementById("loadingScreen").classList.add("hidden");
         } else {
             // Reproducir el sonido error
             var sonido = new Audio('../../songs/error.mp3'); // Asegúrate de que la ruta sea correcta
@@ -140,6 +148,8 @@ function updateQuantity(idProducto, cantidad) {
             //=============================================================
            showNotification("Error al actualizar cantidad", "bg-red-500");
             console.error("Error al actualizar cantidad:", data.message);
+            // Ocultar el loader después de la operación
+            document.getElementById("loadingScreen").classList.add("hidden");
         }
     })
     .catch(error => {
@@ -151,6 +161,8 @@ function updateQuantity(idProducto, cantidad) {
         });
         //=============================================================
        showNotification("Error al actualizar cantidad", "bg-red-500");
+       // Ocultar el loader después de la operación
+       document.getElementById("loadingScreen").classList.add("hidden");
         console.error("Error al actualizar cantidad:", data.message);
     });
 }
