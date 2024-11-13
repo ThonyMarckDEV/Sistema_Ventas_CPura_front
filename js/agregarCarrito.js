@@ -3,17 +3,17 @@ import { actualizarCantidadCarrito } from './contadorCarrito.js';
 
 let selectedProductId = null;
 
-let selectedProductStock = 0; // Variable global para almacenar el stock del producto seleccionado
+let selectedProductStock = 0; 
 
-let selectedProductCantidadEnCarrito = 0; // Cantidad actual en el carrito
+let selectedProductCantidadEnCarrito = 0; 
 
 export function showModal(idProducto, nombreProducto, stockProducto, cantidadEnCarrito) {
     selectedProductId = idProducto;
     selectedProductStock = stockProducto;
-    selectedProductCantidadEnCarrito = cantidadEnCarrito || 0; // Cantidad en el carrito o 0 si no existe
+    selectedProductCantidadEnCarrito = cantidadEnCarrito || 0; 
     const modal = document.getElementById("modal");
     document.getElementById("modalProductName").textContent = nombreProducto;
-    document.getElementById("cantidadInput").value = 1; // Iniciar con cantidad 1
+    document.getElementById("cantidadInput").value = 1; 
     modal.classList.remove("hidden");
 }
 
@@ -27,7 +27,7 @@ function updateCantidad(increment) {
     const cantidadInput = document.getElementById("cantidadInput");
     let cantidad = parseInt(cantidadInput.value) || 1;
     cantidad = increment ? cantidad + 1 : cantidad - 1;
-    cantidadInput.value = cantidad > 0 ? cantidad : 1; // Evitar valores negativos
+    cantidadInput.value = cantidad > 0 ? cantidad : 1;
 }
 
 // Validar la entrada manual de cantidad para que no exceda el stock

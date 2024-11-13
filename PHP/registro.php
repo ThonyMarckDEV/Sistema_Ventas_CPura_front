@@ -23,16 +23,24 @@
             <div class="mb-4"><label for="nombres" class="block text-sm font-medium text-gray-700">Nombres</label><input type="text" id="nombres" name="nombres" class="w-full mt-1 p-2 border border-gray-300 rounded-lg" required></div>
             <div class="mb-4"><label for="apellidos" class="block text-sm font-medium text-gray-700">Apellidos</label><input type="text" id="apellidos" name="apellidos" class="w-full mt-1 p-2 border border-gray-300 rounded-lg" required></div>
             <div class="mb-4">
-                <label for="dni" class="block text-sm font-medium text-gray-700">DNI (8 digitos)</label>
-                <input type="text" id="dni" name="dni" class="w-full mt-1 p-2 border border-gray-300 rounded-lg" 
-                    pattern="\d{8}" title="El DNI debe contener exactamente 8 dígitos" required>
+                <label for="dni" class="block text-sm font-medium text-gray-700">DNI (8 dígitos)</label>
+                <input 
+                    type="text" 
+                    id="dni" 
+                    name="dni" 
+                    class="w-full mt-1 p-2 border border-gray-300 rounded-lg" 
+                    pattern="\d{8}" 
+                    title="El DNI debe contener exactamente 8 dígitos" 
+                    inputmode="numeric" 
+                    oninput="this.value = this.value.replace(/\D/g, '').slice(0, 8);" 
+                    required>
             </div>
             <div class="mb-4"><label for="correo" class="block text-sm font-medium text-gray-700">Correo electrónico</label><input type="email" id="correo" name="correo" class="w-full mt-1 p-2 border border-gray-300 rounded-lg" required></div>
             <div class="mb-4"><label for="telefono" class="block text-sm font-medium text-gray-700">Teléfono (9 digitos)</label><input type="text" id="telefono" name="telefono" class="w-full mt-1 p-2 border border-gray-300 rounded-lg" required></div>
             <div class="mb-4"><label for="edad" class="block text-sm font-medium text-gray-700">Edad</label><input type="number" id="edad" name="edad" class="w-full mt-1 p-2 border border-gray-300 rounded-lg" required></div>
             
             <!-- Campo Contraseña -->
-            <div class="mb-4"><label for="password" class="block text-sm font-medium text-gray-700">Contraseña (Min.8 Caracteres)</label><input type="password" id="password" name="password" class="w-full mt-1 p-2 border border-gray-300 rounded-lg" required></div>
+            <div class="mb-4"><label for="password" class="block text-sm font-medium text-gray-700">Contraseña (Min. 8 Caracteres)</label><input type="password" id="password" name="password" class="w-full mt-1 p-2 border border-gray-300 rounded-lg" required></div>
             
             <!-- Campo Repetir Contraseña -->
             <div class="mb-4"><label for="confirmPassword" class="block text-sm font-medium text-gray-700">Repetir Contraseña</label><input type="password" id="confirmPassword" name="confirmPassword" class="w-full mt-1 p-2 border border-gray-300 rounded-lg" required></div>
