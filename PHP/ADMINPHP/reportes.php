@@ -40,6 +40,9 @@
                 <canvas id="ventasChart"></canvas>
             </div>
             <div class="bg-white p-3 rounded-lg shadow chart-container">
+                <canvas id="pagosCompletadosChart"></canvas>
+            </div>
+            <div class="bg-white p-3 rounded-lg shadow chart-container">
                 <canvas id="pedidosChart"></canvas>
             </div>
             <div class="bg-white p-3 rounded-lg shadow chart-container">
@@ -51,6 +54,7 @@
             <div class="bg-white p-3 rounded-lg shadow chart-container">
                 <canvas id="bajoStockChart"></canvas>
             </div>
+            
         </div>
 
     </div>

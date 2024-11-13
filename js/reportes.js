@@ -24,22 +24,42 @@ async function fetchData(endpoint) {
     }
 }
 
+// Función para cargar cantidad de pagos completados
+async function fetchCantidadPagosCompletados() {
+    const response = await fetchData('reportes/pagos-completados');
+    return response.cantidadPagosCompletados;
+}
+
 // Generar los gráficos
 async function generarReportes() {
     // Cargar datos desde las APIs
-    const ventasData = await fetchData('reportes/total-ventas-completadas');
+    const ventasData = await fetchData('reportes/total-ingresos');
     const pedidosData = await fetchData('reportes/total-pedidos-completados');
     const clientesData = await fetchData('reportes/total-clientes');
     const productosData = await fetchData('reportes/total-productos');
     const bajoStockData = await fetchData('reportes/productos-bajo-stock');
+    const cantidadPagosCompletados = await fetchCantidadPagosCompletados();
 
-    // Gráfico Total Ventas
+     // Gráfico Pagos Completados
+     new Chart(document.getElementById('pagosCompletadosChart'), {
+        type: 'bar',
+        data: {
+            labels: ['Pagos Completados'],
+            datasets: [{
+                label: 'Cantidad de Pagos Completados',
+                data: [cantidadPagosCompletados],
+                backgroundColor: ['#4A90E2'],
+            }],
+        },
+    });
+
+    // Gráfico Ingresos
     new Chart(document.getElementById('ventasChart'), {
         type: 'doughnut',
         data: {
-            labels: ['Ventas Completadas'],
+            labels: ['Ingresos'],
             datasets: [{
-                label: 'Total de Ventas Completadas',
+                label: 'Ingresos S/.',
                 data: [ventasData.totalVentas],
                 backgroundColor: ['#4CAF50'],
             }],
