@@ -1,5 +1,5 @@
 import API_BASE_URL from './urlHelper.js';
-
+import { actualizarCantidadPedidosAdmin } from './contadorPedidosAdmin.js';
 // Obtener el token JWT desde localStorage
 const token = localStorage.getItem('jwt');
 
@@ -219,6 +219,7 @@ function deleteOrder(pedido) {
                  document.getElementById("loadingScreen").classList.add("hidden");
                 showNotification('Pedido eliminado correctamente', 'bg-green-500');
                 fetchPedidos(); // Actualizar la lista de pedidos
+                actualizarCantidadPedidosAdmin();
             } else {
                  // Reproducir el sonido error
                  var sonido = new Audio('../../songs/error.mp3'); 
@@ -511,6 +512,7 @@ if (confirmOrderStatusButton) {
                     showNotification('Estado del pedido actualizado', 'bg-green-500');
                     changeOrderStatusModal.classList.add('hidden');
                     fetchPedidos();
+                    actualizarCantidadPedidosAdmin();
                 } else {
                     // Reproducir el sonido error
                     var sonido = new Audio('../../songs/error.mp3'); 

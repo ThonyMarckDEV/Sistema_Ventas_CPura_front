@@ -34,6 +34,8 @@ RewriteCond %{REQUEST_URI} !/gestionarProductos.js$ [NC]
 RewriteCond %{REQUEST_URI} !/gestionarCategorias.js$ [NC]
 RewriteCond %{REQUEST_URI} !/pedidosAdmin.js$ [NC]
 RewriteCond %{REQUEST_URI} !/reportes.js$ [NC]
+RewriteCond %{REQUEST_URI} !/contadorPedidosAdmin.js$ [NC]
+
 
 # AUTH JS
 RewriteCond %{REQUEST_URI} !/checkRole.js$ [NC]

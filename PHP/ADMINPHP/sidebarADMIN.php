@@ -11,11 +11,18 @@
                 <span class="mr-3 text-gray-500"><i class="fas fa-home"></i></span>
                 <a href="Admin.php" class="text-gray-700 font-semibold hover:bg-gray-200 hover:text-gray-900 p-2 rounded w-full">Escritorio</a>
             </li>
-            
-            <li class="flex items-center mb-6">
+
+            <li class="flex items-center mb-6 relative">
                 <span class="mr-3 text-gray-500"><i class="fas fa-box"></i></span>
-                <a href="pedidosAdmin.php" class="text-gray-700 font-semibold hover:bg-gray-200 hover:text-gray-900 p-2 rounded w-full">Pedidos</a>
+                <a href="pedidosAdmin.php" class="text-gray-700 font-semibold hover:bg-gray-200 hover:text-gray-900 p-2 rounded w-full flex items-center">
+                    Pedidos
+                    <!-- Contador de notificaciones al lado de Pedidos -->
+                    <span id="pedidosCantidad" class="ml-2 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full hidden">
+                        0
+                    </span>
+                </a>
             </li>
+
 
             <li class="flex items-center mb-6">
                 <span class="mr-3 text-gray-500"><i class="fas fa-chart-bar"></i></span>
@@ -131,3 +138,4 @@
 <?php include '../inactivity.php'; ?>
 <!-- <script Checka inactyividad Usuario></script> -->
 <script type="module" src="../../js/checkInactivity.js"></script>
+<script type="module" src="../../js/contadorPedidosAdmin.js"></script>
