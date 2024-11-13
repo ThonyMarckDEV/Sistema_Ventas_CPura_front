@@ -3,8 +3,6 @@ import { actualizarCantidadCarrito } from './contadorCarrito.js';
 
 import { verificarYRenovarToken } from './authToken.js';
 
-// Verificar y renovar el token antes de cualquier solicitud
-await verificarYRenovarToken();
 
 let selectedProductId = null;
 
