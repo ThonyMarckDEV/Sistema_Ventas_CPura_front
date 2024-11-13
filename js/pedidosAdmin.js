@@ -125,7 +125,7 @@ async function renderPedidos(pedidos) {
 
         // Botones de acción
         const actionButtons = document.createElement('div');
-        actionButtons.className = 'mt-4 flex space-x-4';
+        actionButtons.className = 'mt-4 flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-4';
 
         // Botón "Ver Detalles"
         const viewDetailsButton = document.createElement('button');

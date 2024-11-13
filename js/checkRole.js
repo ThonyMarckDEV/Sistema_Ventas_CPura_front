@@ -2,9 +2,10 @@
 
 import API_BASE_URL from './urlHelper.js';
 
+const token = localStorage.getItem("jwt");
+
 document.addEventListener("DOMContentLoaded", function() {
     console.log("Iniciando verificación de token almacenado...");
-    const token = localStorage.getItem("jwt");
 
     // Verificación inicial del token
     if (!token) {

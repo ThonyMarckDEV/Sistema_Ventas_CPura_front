@@ -21,13 +21,11 @@ function isTemporaryEmail(email) {
 }
 
 function isValidEmail(email) {
-    // Expresión regular para validar el formato y dominio del correo electrónico
     const regex = /^[^\s@]+@gmail\.com$/i;
     return regex.test(email);
 }
 
 function validateFormData(data) {
-    // Verificar que todos los campos estén llenados
     for (const [key, value] of Object.entries(data)) {
         if (!value.trim()) {
             showNotification(`El campo ${key} es obligatorio`, 'bg-red-500');
@@ -35,29 +33,21 @@ function validateFormData(data) {
         }
     }
 
-    // Validar el formato del correo electrónico
     if (!isValidEmail(data.correo)) {
-                    //=============================================================
-             // Reproducir el sonido error
-             var sonido = new Audio('../../songs/error.mp3');
-             sonido.play().catch(function(error) {
-                 console.error("Error al reproducir el sonido:", error);
-             });           
-            //=============================================================
+        new Audio('../../songs/error.mp3').play().catch(error => console.error("Error al reproducir el sonido:", error));
         showNotification('El correo electrónico debe ser una dirección de Gmail válida', 'bg-red-500');
         return false;
     }
 
-    // Verificar si el correo es temporal
     if (isTemporaryEmail(data.correo)) {
-              //=============================================================
-             // Reproducir el sonido error
-             var sonido = new Audio('../../songs/error.mp3');
-             sonido.play().catch(function(error) {
-                 console.error("Error al reproducir el sonido:", error);
-             });           
-            //=============================================================
+        new Audio('../../songs/error.mp3').play().catch(error => console.error("Error al reproducir el sonido:", error));
         showNotification('No se permiten correos temporales', 'bg-red-500');
+        return false;
+    }
+
+    if (data.password !== data.confirmPassword) {
+        new Audio('../../songs/error.mp3').play().catch(error => console.error("Error al reproducir el sonido:", error));
+        showNotification('Las contraseñas no coinciden', 'bg-red-500');
         return false;
     }
 
@@ -69,17 +59,12 @@ function submitRegisterForm() {
     const formData = new FormData(form);
     const data = Object.fromEntries(formData.entries());
 
-    // Validar los datos antes de enviar
     if (!validateFormData(data)) {
         return;
     }
 
-    // Generar el username basado en Nombres y Apellidos
     data.username = generateUsername(data.nombres, data.apellidos);
     data.rol = 'cliente';
-
-    // Revisa los datos que se van a enviar
-    console.log("Datos a enviar:", data);
 
     const loadingScreen = document.getElementById("loadingScreen");
     loadingScreen.classList.remove("hidden");
@@ -105,8 +90,6 @@ function submitRegisterForm() {
             new Audio('../../songs/success.mp3').play().catch(error => console.error("Error al reproducir el sonido:", error));
             showNotification("Usuario registrado exitosamente", "bg-green-500");
             form.reset();
-
-            // Redirigir a login.php después de mostrar la notificación
             setTimeout(() => {
                 window.location.href = 'login.php';
             }, 1700);

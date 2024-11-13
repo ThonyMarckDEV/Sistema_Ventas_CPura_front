@@ -52,8 +52,20 @@ async function verificarDireccionUsuario() {
         const direccionUsando = direcciones.find(d => d.estado === 'usando');
 
         if (direcciones.length === 0) {
+                // Reproducir el sonido error
+                var sonido = new Audio('../../songs/error.mp3'); // Asegúrate de que la ruta sea correcta
+                sonido.play().catch(function(error) {
+                    console.error("Error al reproducir el sonido:", error);
+                });
+                //=============================================================
             showNotification("Error: Agrega una dirección para el envío", "bg-red-500");
         } else if (!direccionUsando) {
+                // Reproducir el sonido error
+                var sonido = new Audio('../../songs/error.mp3'); // Asegúrate de que la ruta sea correcta
+                sonido.play().catch(function(error) {
+                    console.error("Error al reproducir el sonido:", error);
+                });
+                //=============================================================
             showNotification("Error: Selecciona una dirección para usar", "bg-red-500");
         } else {
             proceedToCheckout(); // Procede al pago si todo está bien

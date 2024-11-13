@@ -241,12 +241,14 @@ function validarArchivoAdjunto() {
 // Confirmar el tipo de pago y adjuntar comprobante
 if (confirmPaymentTypeButton) {
     confirmPaymentTypeButton.addEventListener('click', () => {
-        if (!validarArchivoAdjunto()) {
-            return;
-        }
-
         const selectedMethod = paymentMethodSelect.value;
+
+        // Si es Yape o Plin, validamos el archivo adjunto y enviamos con comprobante
         if (selectedMethod === 'yape' || selectedMethod === 'plin') {
+            if (!validarArchivoAdjunto()) {
+                return;
+            }
+
             const formData = new FormData();
             formData.append('comprobante', comprobanteFileInput.files[0]);
             formData.append('metodo_pago', selectedMethod);
@@ -260,26 +262,45 @@ if (confirmPaymentTypeButton) {
                 },
                 body: formData
             }).then(response => response.json()).then(data => {
+                document.getElementById("loadingScreen").classList.add("hidden");
                 if (data.success) {
                     var sonido = new Audio('../../songs/success.mp3');
                     sonido.play().catch(error => console.error("Error al reproducir el sonido:", error));
                     showNotification('Pago procesado exitosamente.', 'bg-green-500');
-                    document.getElementById("loadingScreen").classList.add("hidden");
                     cerrarPaymentTypeModal();
                     fetchPedidos();
                 } else {
                     var sonido = new Audio('../../songs/error.mp3');
                     sonido.play().catch(error => console.error("Error al reproducir el sonido:", error));
                     showNotification(data.message || 'Error al procesar el pago.', 'bg-red-500');
-                    document.getElementById("loadingScreen").classList.add("hidden");
                 }
-            });
-        } else {
-            var sonido = new Audio('../../songs/success.mp3');
-            sonido.play().catch(error => console.error("Error al reproducir el sonido:", error));
-            document.getElementById("loadingScreen").classList.add("hidden");
-            showNotification('Pago en efectivo confirmado', 'bg-green-500');
-            cerrarPaymentTypeModal();
+            }).catch(error => console.error("Error al procesar el pago:", error));
+        
+        // Si es "Pago en efectivo", solo enviamos el método de pago sin comprobante
+        } else if (selectedMethod === 'efectivo') {
+            document.getElementById("loadingScreen").classList.remove("hidden");
+
+            fetch(`${API_BASE_URL}/api/procesar-pago/${pedidoSeleccionado.idPedido}`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ metodo_pago: 'efectivo' })
+            }).then(response => response.json()).then(data => {
+                document.getElementById("loadingScreen").classList.add("hidden");
+                if (data.success) {
+                    var sonido = new Audio('../../songs/success.mp3');
+                    sonido.play().catch(error => console.error("Error al reproducir el sonido:", error));
+                    showNotification('Pago en efectivo confirmado', 'bg-green-500');
+                    cerrarPaymentTypeModal();
+                    fetchPedidos();
+                } else {
+                    var sonido = new Audio('../../songs/error.mp3');
+                    sonido.play().catch(error => console.error("Error al reproducir el sonido:", error));
+                    showNotification(data.message || 'Error al confirmar el pago en efectivo.', 'bg-red-500');
+                }
+            }).catch(error => console.error("Error al confirmar el pago en efectivo:", error));
         }
     });
 }

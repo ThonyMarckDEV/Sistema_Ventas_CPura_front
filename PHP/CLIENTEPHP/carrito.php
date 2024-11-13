@@ -30,22 +30,26 @@
 
         <h2 class="text-xl font-bold mb-4">Productos en tu Carrito</h2>
     
-            <!-- Tabla de productos -->
-            <table class="min-w-full bg-white border rounded shadow">
-                <thead>
-                    <tr>
-                        <th class="py-2 px-4 border-b text-left">Producto</th>
-                        <th class="py-2 px-4 border-b text-left">Cantidad</th>
-                        <th class="py-2 px-4 border-b text-left">Precio Unitario</th>
-                        <th class="py-2 px-4 border-b text-left">Subtotal</th>
-                        <th class="py-2 px-4 border-b text-left">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody id="cartTableBody">
-                    <!-- Filas generadas dinámicamente -->
-                </tbody>
-            </table>
+           <!-- Contenedor de desplazamiento para la tabla -->
+            <div class="overflow-auto max-w-full">
+                <!-- Tabla de productos -->
+                <table class="min-w-full bg-white border rounded shadow">
+                    <thead>
+                        <tr>
+                            <th class="py-2 px-4 border-b text-left">Producto</th>
+                            <th class="py-2 px-4 border-b text-left">Cantidad</th>
+                            <th class="py-2 px-4 border-b text-left">Precio Unitario</th>
+                            <th class="py-2 px-4 border-b text-left">Subtotal</th>
+                            <th class="py-2 px-4 border-b text-left">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cartTableBody">
+                        <!-- Filas generadas dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
 
+            
             <!-- Total del carrito -->
             <div class="flex justify-between items-center mt-6">
                 <h3 class="text-lg font-semibold">Total:</h3>

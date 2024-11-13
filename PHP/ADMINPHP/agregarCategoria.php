@@ -54,21 +54,27 @@
                 <input type="text" id="searchInput" placeholder="Buscar categoría..." class="w-full p-2 border rounded" oninput="filterCategories()">
             </div>
 
-            <!-- Tabla de Categorías -->
+            <!-- Encabezado de la Tabla de Categorías -->
             <h2 class="text-2xl font-bold mb-4">Lista de Categorías</h2>
-            <table class="min-w-full bg-white border rounded shadow">
-                <thead>
-                    <tr>
-                        <th class="py-2 px-4 border-b">ID</th>
-                        <th class="py-2 px-4 border-b">Nombre</th>
-                        <th class="py-2 px-4 border-b">Descripción</th>
-                        <th class="py-2 px-4 border-b">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody id="categoryTableBody">
-                    <!-- Filas de categorías generadas dinámicamente -->
-                </tbody>
-            </table>
+
+            <!-- Contenedor Deslizable para la Tabla -->
+            <div class="overflow-x-auto">
+                <table class="min-w-full bg-white border rounded shadow">
+                    <thead>
+                        <tr>
+                            <th class="py-2 px-4 border-b">ID</th>
+                            <th class="py-2 px-4 border-b">Nombre</th>
+                            <th class="py-2 px-4 border-b">Descripción</th>
+                            <th class="py-2 px-4 border-b">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="categoryTableBody">
+                        <!-- Filas de categorías generadas dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+
+
         </div>
     </div>
 

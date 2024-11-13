@@ -80,23 +80,27 @@
                 <input type="text" id="searchInput" placeholder="Buscar producto..." class="w-full p-2 border rounded">
             </div>
             
-            <table class="min-w-full bg-white border rounded shadow">
-                <thead>
-                    <tr>
-                        <th class="py-2 px-4 border-b">ID</th>
-                        <th class="py-2 px-4 border-b">Nombre</th>
-                        <th class="py-2 px-4 border-b">Descripción</th>
-                        <th class="py-2 px-4 border-b">Precio</th>
-                        <th class="py-2 px-4 border-b">Stock</th>
-                        <th class="py-2 px-4 border-b">Imagen</th>
-                        <th class="py-2 px-4 border-b">Categoría</th> <!-- Nueva columna para el nombre de la categoría -->
-                        <th class="py-2 px-4 border-b">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody id="productTableBody">
-                    <!-- Filas de productos generadas dinámicamente -->
-                </tbody>
-            </table>
+           <!-- Contenedor Deslizable para la Tabla -->
+            <div class="overflow-x-auto">
+                <table class="min-w-full bg-white border rounded shadow">
+                    <thead>
+                        <tr>
+                            <th class="py-2 px-4 border-b">ID</th>
+                            <th class="py-2 px-4 border-b">Nombre</th>
+                            <th class="py-2 px-4 border-b">Descripción</th>
+                            <th class="py-2 px-4 border-b">Precio</th>
+                            <th class="py-2 px-4 border-b">Stock</th>
+                            <th class="py-2 px-4 border-b">Imagen</th>
+                            <th class="py-2 px-4 border-b">Categoría</th> <!-- Nueva columna para el nombre de la categoría -->
+                            <th class="py-2 px-4 border-b">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productTableBody">
+                        <!-- Filas de productos generadas dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+
         </div>
     </div>
 

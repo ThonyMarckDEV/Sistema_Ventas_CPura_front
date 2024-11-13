@@ -67,22 +67,25 @@
             <!-- Aquí se insertarán región, provincia y dirección del pedido -->
         </div>
 
-        <!-- Tabla de detalles del pedido -->
-        <table class="w-full border">
-            <thead>
-                <tr class="bg-gray-200">
-                    <th class="px-4 py-2 border">ID Detalle</th>
-                    <th class="px-4 py-2 border">ID Producto</th>
-                    <th class="px-4 py-2 border">Producto</th>
-                    <th class="px-4 py-2 border">Cantidad</th>
-                    <th class="px-4 py-2 border">Precio Unitario</th>
-                    <th class="px-4 py-2 border">Subtotal</th>
-                </tr>
-            </thead>
-            <tbody id="modalDetalles">
-                <!-- Detalles del pedido generados dinámicamente -->
-            </tbody>
-        </table>
+       <!-- Contenedor de desplazamiento para la tabla -->
+        <div class="overflow-x-auto">
+            <!-- Tabla de detalles del pedido -->
+            <table class="w-full border">
+                <thead>
+                    <tr class="bg-gray-200">
+                        <th class="px-4 py-2 border">ID Detalle</th>
+                        <th class="px-4 py-2 border">ID Producto</th>
+                        <th class="px-4 py-2 border">Producto</th>
+                        <th class="px-4 py-2 border">Cantidad</th>
+                        <th class="px-4 py-2 border">Precio Unitario</th>
+                        <th class="px-4 py-2 border">Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody id="modalDetalles">
+                    <!-- Detalles del pedido generados dinámicamente -->
+                </tbody>
+            </table>
+        </div>
         
         <!-- Botón de acción para proceder al pago -->
         <div class="flex justify-end mt-4">
