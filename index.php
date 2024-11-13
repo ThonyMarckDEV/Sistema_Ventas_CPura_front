@@ -70,7 +70,7 @@
             <div class="flex justify-center lg:justify-start space-x-4 mb-4">
                 <a href="./PHP/login.php" class="bg-blue-500 text-white font-semibold py-2 px-4 rounded hover:bg-blue-400 hover:text-white">Let's Start</a>
             </div>
-            <p class="font-medium">#BEBEAUGAPURA</p>
+            <p class="font-medium">#BEBEAGUAPURA</p>
         </div>
 
         <!-- Contenido de Imagen Derecha -->
