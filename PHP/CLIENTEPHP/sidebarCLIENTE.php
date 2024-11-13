@@ -12,7 +12,13 @@
                 <a href="Cliente.php" class="text-gray-700 font-semibold hover:bg-gray-200 hover:text-gray-900 p-2 rounded w-full">Escritorio</a>
             </li>
 
-    
+            <li class="flex items-center mb-6">
+                <span class="mr-3 text-gray-500"><i class="fas fa-user"></i></span>
+                <a href="perfilCliente.php" class="text-gray-700 font-semibold hover:bg-gray-200 hover:text-gray-900 p-2 rounded w-full">
+                    Mi Perfil
+                </a>
+            </li>
+
 
             <li class="flex items-center mb-6">
                 <span class="mr-3 text-gray-500"><i class="fas fa-shopping-cart"></i></span>

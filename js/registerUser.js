@@ -59,10 +59,12 @@ function submitRegisterForm() {
     const formData = new FormData(form);
     const data = Object.fromEntries(formData.entries());
 
+    // Llamar a la función de validación
     if (!validateFormData(data)) {
         return;
     }
 
+    // Generar username automáticamente y establecer el rol
     data.username = generateUsername(data.nombres, data.apellidos);
     data.rol = 'cliente';
 
@@ -106,6 +108,7 @@ function submitRegisterForm() {
         loadingScreen.classList.add("hidden");
     });
 }
+
 
 function showNotification(message, bgColor) {
     const notification = document.getElementById("notification");
