@@ -9,6 +9,9 @@ export async function loadCartProducts() {
     // Verificar y renovar el token antes de cualquier solicitud
     await verificarYRenovarToken();
 
+    // // Mostrar el loader
+    // document.getElementById("loadingScreen").classList.remove("hidden");
+
     fetch(`${API_BASE_URL}/api/carrito`, {
         method: "GET",
         headers: {
@@ -29,7 +32,13 @@ export async function loadCartProducts() {
             console.error("Datos del carrito no encontrados o vacíos.");
         }
     })
-    .catch(error => console.error("Error al cargar productos del carrito:", error));
+    .catch(
+        error => console.error("Error al cargar productos del carrito:", error
+
+    )).finally(() => {
+        // // Ocultar el loader después de la operación
+        // document.getElementById("loadingScreen").classList.add("hidden");
+    });;
 }
 
 function renderCartTable(products) {

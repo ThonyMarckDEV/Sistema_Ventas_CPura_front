@@ -96,6 +96,65 @@ async function fetchPedidos() {
     }
 }
 
+// function renderPedidos(pedidos) {
+//     pedidosTableBody.innerHTML = '';
+
+//     pedidos.forEach((pedido) => {
+//         const tr = document.createElement('tr');
+
+//         // ID Pedido
+//         const tdIdPedido = document.createElement('td');
+//         tdIdPedido.textContent = pedido.idPedido;
+//         tdIdPedido.className = 'py-3 px-6 border-b';
+//         tr.appendChild(tdIdPedido);
+
+//         // Total
+//         const tdTotal = document.createElement('td');
+//         tdTotal.textContent = `S/${Number(pedido.total).toFixed(2)}`;
+//         tdTotal.className = 'py-3 px-6 border-b';
+//         tr.appendChild(tdTotal);
+
+//         // Estado
+//         const tdEstado = document.createElement('td');
+//         tdEstado.textContent = capitalizeFirstLetter(pedido.estado);
+//         tdEstado.className = pedido.estado.toLowerCase() === 'completado'
+//             ? 'py-3 px-6 border-b text-green-500 font-semibold'
+//             : 'py-3 px-6 border-b';
+//         tr.appendChild(tdEstado);
+
+//         // Acción
+//         const tdAccion = document.createElement('td');
+//         const estadosConAmbosBotones = ['aprobando', 'en preparacion', 'enviado', 'completado'];
+
+//         if (estadosConAmbosBotones.includes(pedido.estado.toLowerCase())) {
+//             const botonVerEstado = document.createElement('button');
+//             botonVerEstado.textContent = 'Ver Estado';
+//             botonVerEstado.className = `px-4 py-2 ${pedido.estado.toLowerCase() === 'completado' ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-500 hover:bg-gray-600'} text-white rounded mr-2`;
+//             botonVerEstado.addEventListener('click', () => abrirEstadoModal(pedido.estado));
+
+//             const botonVerDetalles = document.createElement('button');
+//             botonVerDetalles.textContent = 'Ver Detalles';
+//             botonVerDetalles.className = `px-4 py-2 ${pedido.estado.toLowerCase() === 'completado' ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-500 hover:bg-blue-600'} text-white rounded`;
+//             botonVerDetalles.addEventListener('click', () => abrirModal(pedido));
+
+//             tdAccion.appendChild(botonVerEstado);
+//             tdAccion.appendChild(botonVerDetalles);
+//         } else {
+//             const botonDetalles = document.createElement('button');
+//             botonDetalles.textContent = 'Ver Detalles';
+//             botonDetalles.className = 'px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600';
+//             botonDetalles.addEventListener('click', () => abrirModal(pedido));
+//             tdAccion.appendChild(botonDetalles);
+//         }
+
+//         tdAccion.className = 'py-3 px-6 border-b';
+//         tr.appendChild(tdAccion);
+
+//         pedidosTableBody.appendChild(tr);
+//     });
+// }
+
+
 function renderPedidos(pedidos) {
     pedidosTableBody.innerHTML = '';
 
@@ -147,12 +206,61 @@ function renderPedidos(pedidos) {
             tdAccion.appendChild(botonDetalles);
         }
 
+        // Botón Cancelar Pedido (solo si está pendiente)
+        if (pedido.estado.toLowerCase() === 'pendiente') {
+            const botonCancelar = document.createElement('button');
+            botonCancelar.textContent = 'Cancelar Pedido';
+            botonCancelar.className = 'px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 ml-2';
+            botonCancelar.addEventListener('click', () => cancelarPedido(pedido.idPedido));
+            tdAccion.appendChild(botonCancelar);
+        }
+
         tdAccion.className = 'py-3 px-6 border-b';
         tr.appendChild(tdAccion);
 
         pedidosTableBody.appendChild(tr);
     });
 }
+
+
+async function cancelarPedido(idPedido) {
+
+    // Verificar y renovar el token antes de cualquier solicitud
+    await verificarYRenovarToken();
+
+    const confirmacion = confirm('¿Estás seguro de que deseas cancelar este pedido?');
+    if (!confirmacion) return;
+
+    document.getElementById("loadingScreen").classList.remove("hidden");
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/cancelarPedido`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ idPedido })
+        });
+
+        if (response.ok) {
+            alert('Pedido cancelado exitosamente');
+            // Ocultar el loader después de la operación
+            document.getElementById("loadingScreen").classList.add("hidden");
+            // Recargar la página si se cancela el pedido con éxito
+            location.reload();
+        } else {
+            // Ocultar el loader después de la operación
+            document.getElementById("loadingScreen").classList.add("hidden");
+            alert('Error al cancelar el pedido');
+        }
+    } catch (error) {
+        // Ocultar el loader después de la operación
+        document.getElementById("loadingScreen").classList.add("hidden");
+        console.error('Error:', error);
+    }
+}
+
 
 // Función para obtener la dirección del pedido
 async function obtenerDireccionPedido(idPedido) {
@@ -253,8 +361,6 @@ function validarArchivoAdjunto() {
 if (confirmPaymentTypeButton) {
     confirmPaymentTypeButton.addEventListener('click', async () => {
 
-        // Verificar y renovar el token antes de cualquier solicitud
-         await verificarYRenovarToken();
 
         const selectedMethod = paymentMethodSelect.value;
 
@@ -272,6 +378,9 @@ if (confirmPaymentTypeButton) {
 
             document.getElementById("loadingScreen").classList.remove("hidden");
 
+            // Verificar y renovar el token antes de cualquier solicitud
+            await verificarYRenovarToken();
+         
             fetch(`${API_BASE_URL}/api/procesar-pago/${pedidoSeleccionado.idPedido}`, {
                 method: 'POST',
                 headers: {
@@ -296,6 +405,9 @@ if (confirmPaymentTypeButton) {
         // Si es "Pago en efectivo", solo enviamos el método de pago sin comprobante
         } else if (selectedMethod === 'efectivo') {
             document.getElementById("loadingScreen").classList.remove("hidden");
+
+            // Verificar y renovar el token antes de cualquier solicitud
+            await verificarYRenovarToken();
 
             fetch(`${API_BASE_URL}/api/procesar-pago/${pedidoSeleccionado.idPedido}`, {
                 method: 'POST',
