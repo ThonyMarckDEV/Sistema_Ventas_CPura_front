@@ -3,8 +3,14 @@ import { actualizarCantidadCarrito } from './contadorCarrito.js';
 
 let selectedProductId = null;
 
-export function showModal(idProducto, nombreProducto) {
+let selectedProductStock = 0; // Variable global para almacenar el stock del producto seleccionado
+
+let selectedProductCantidadEnCarrito = 0; // Cantidad actual en el carrito
+
+export function showModal(idProducto, nombreProducto, stockProducto, cantidadEnCarrito) {
     selectedProductId = idProducto;
+    selectedProductStock = stockProducto;
+    selectedProductCantidadEnCarrito = cantidadEnCarrito || 0; // Cantidad en el carrito o 0 si no existe
     const modal = document.getElementById("modal");
     document.getElementById("modalProductName").textContent = nombreProducto;
     document.getElementById("cantidadInput").value = 1; // Iniciar con cantidad 1
@@ -16,13 +22,27 @@ function hideModal() {
     document.getElementById("modal").classList.add("hidden");
 }
 
-// Incrementar o decrementar la cantidad
+// Actualizar la cantidad en el input
 function updateCantidad(increment) {
     const cantidadInput = document.getElementById("cantidadInput");
-    let cantidad = parseInt(cantidadInput.value);
+    let cantidad = parseInt(cantidadInput.value) || 1;
     cantidad = increment ? cantidad + 1 : cantidad - 1;
     cantidadInput.value = cantidad > 0 ? cantidad : 1; // Evitar valores negativos
 }
+
+// Validar la entrada manual de cantidad para que no exceda el stock
+document.getElementById("cantidadInput").addEventListener("input", () => {
+    const cantidadInput = document.getElementById("cantidadInput");
+    let cantidad = parseInt(cantidadInput.value);
+
+    // Verificar que la cantidad sea válida y no supere el stock
+    if (cantidad > selectedProductStock) {
+        showNotification("La cantidad supera el stock disponible", "bg-red-500");
+        cantidadInput.value = selectedProductStock; // Limitar al stock disponible
+    } else if (cantidad < 1) {
+        cantidadInput.value = 1; // No permitir valores menores a 1
+    }
+});
 
 // Función para descifrar el JWT y obtener el payload
 function parseJwt(token) {
@@ -35,13 +55,24 @@ function parseJwt(token) {
     return JSON.parse(jsonPayload);
 }
 
+// Función para agregar el producto al carrito
 export async function agregarAlCarrito() {
     const token = localStorage.getItem("jwt");
-    const cantidad = document.getElementById("cantidadInput").value;
+    const cantidad = parseInt(document.getElementById("cantidadInput").value);
 
     // Extrae el idUsuario desde el token JWT
     const payload = parseJwt(token);
-    const idUsuario = payload.idUsuario; // Ajusta el nombre de acuerdo a tu payload JWT
+    const idUsuario = payload.idUsuario;
+
+    // Calcular la cantidad total después de agregar la nueva cantidad
+    const cantidadTotal = selectedProductCantidadEnCarrito + cantidad;
+
+    // Verificar stock antes de enviar la solicitud
+    if (cantidadTotal > selectedProductStock) {
+        showNotification("La cantidad total supera el stock disponible", "bg-red-500");
+        hideModal(); // Cerrar el modal si la cantidad supera el stock
+        return;
+    }
 
     // Mostrar el loader al enviar el formulario
     document.getElementById("loadingScreen").classList.remove("hidden");
@@ -63,27 +94,30 @@ export async function agregarAlCarrito() {
         const data = await response.json();
 
         if (response.ok) {
-            var sonido = new Audio('../../songs/success.mp3');
+            const sonido = new Audio('../../songs/success.mp3');
             sonido.play().catch(function(error) {
                 console.error("Error al reproducir el sonido:", error);
             });
             showNotification("Productos agregados al carrito exitosamente", "bg-green-500");
-            hideModal();
+            hideModal(); // Cerrar el modal al agregar con éxito
             actualizarCantidadCarrito();
         } else {
-            var sonido = new Audio('../../songs/error.mp3');
+            const sonido = new Audio('../../songs/error.mp3');
             sonido.play().catch(function(error) {
                 console.error("Error al reproducir el sonido:", error);
             });
-            showNotification("Error al agregar productos al carrito", "bg-red-500");
+            showNotification(data.message || "Error al agregar productos al carrito", "bg-red-500");
+            hideModal(); // Cerrar el modal en caso de error en el backend
         }
     } catch (error) {
         console.error("Error:", error);
         alert("Error al agregar producto al carrito");
+        hideModal(); // Cerrar el modal en caso de error en el frontend
     } finally {
         document.getElementById("loadingScreen").classList.add("hidden");
     }
 }
+
 
 // Función para mostrar notificaciones
 function showNotification(message, bgColor) {

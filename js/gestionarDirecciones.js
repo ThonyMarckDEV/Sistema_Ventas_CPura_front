@@ -87,30 +87,121 @@ function closeMapModal() {
 
 // Función para establecer una dirección como "usando"
 async function setUsando(idDireccion) {
-    await fetch(`${API_BASE_URL}/api/setDireccionUsando/${idDireccion}`, {
-        method: 'PUT',
-        headers: { 
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        },
-    });
-    loadDirecciones();
+    const loader = document.getElementById("loadingScreen");
+    const token = localStorage.getItem("jwt");
+
+    try {
+        // Mostrar el loader
+        loader.classList.remove("hidden");
+
+        const response = await fetch(`${API_BASE_URL}/api/setDireccionUsando/${idDireccion}`, {
+            method: 'PUT',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Error al establecer la dirección como "usando"');
+        }
+
+        // Reproducir sonido de éxito
+        const successSound = new Audio('../../songs/success.mp3'); 
+        successSound.play().catch(error => {
+            console.error("Error al reproducir el sonido de éxito:", error);
+        });
+
+        // Mostrar notificación de éxito
+        showNotification("Dirección establecida como 'usando' exitosamente", "bg-green-500");
+
+        loadDirecciones(); // Recargar la lista de direcciones
+    } catch (error) {
+        console.error('Error:', error);
+
+        // Reproducir sonido de error
+        const errorSound = new Audio('../../songs/error.mp3'); 
+        errorSound.play().catch(error => {
+            console.error("Error al reproducir el sonido de error:", error);
+        });
+
+        // Mostrar notificación de error
+        showNotification("Error al establecer la dirección como 'usando'", "bg-red-500");
+    } finally {
+        // Ocultar el loader
+        loader.classList.add("hidden");
+    }
 }
 
-// Función para eliminar una dirección
+
 async function eliminarDireccion(idDireccion) {
-    await fetch(`${API_BASE_URL}/api/eliminarDireccion/${idDireccion}`, {
-        method: 'DELETE',
-        headers: { 
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        },
-    });
-    loadDirecciones();
+    const loader = document.getElementById("loadingScreen");
+    const token = localStorage.getItem("jwt");
+
+    try {
+        // Mostrar el loader
+        loader.classList.remove("hidden");
+
+        const response = await fetch(`${API_BASE_URL}/api/eliminarDireccion/${idDireccion}`, {
+            method: 'DELETE',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            // Lanza el mensaje de error del backend si la solicitud no fue exitosa
+            throw new Error(data.message || 'Error al eliminar la dirección');
+        }
+
+        // Reproducir sonido de éxito
+        const successSound = new Audio('../../songs/success.mp3'); 
+        successSound.play().catch(error => {
+            console.error("Error al reproducir el sonido de éxito:", error);
+        });
+
+        // Mostrar notificación de éxito
+        showNotification("Dirección eliminada exitosamente", "bg-green-500");
+
+        loadDirecciones(); // Recargar la lista de direcciones
+
+    } catch (error) {
+        console.error('Error:', error.message); // Imprime el mensaje de error específico
+
+        // Reproducir sonido de error
+        const errorSound = new Audio('../../songs/error.mp3'); 
+        errorSound.play().catch(error => {
+            console.error("Error al reproducir el sonido de error:", error);
+        });
+
+        // Mostrar notificación de error con el mensaje proporcionado
+        showNotification(error.message || "Error al eliminar la dirección", "bg-red-500");
+
+    } finally {
+        // Ocultar el loader
+        loader.classList.add("hidden");
+    }
 }
 
 // Cargar las direcciones al cargar la página
 loadDirecciones();
+
+function showNotification(message, bgColor) {
+    const notification = document.getElementById("notification");
+    notification.textContent = message;
+    notification.className = `fixed top-4 left-1/2 transform -translate-x-1/2 px-4 py-2 text-white font-semibold text-center ${bgColor} rounded shadow-md`;
+    notification.style.display = "block";
+
+    
+    setTimeout(() => {
+        notification.style.display = "none";
+    }, 5000);
+}
+
+
 
 // Colocar todas las funciones en el contexto global
 window.eliminarDireccion = eliminarDireccion;

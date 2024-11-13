@@ -69,7 +69,12 @@ document.getElementById('direccionForm').addEventListener('submit', async functi
     formData.set('longitud', document.getElementById('longitud').value);
 
     const token = localStorage.getItem("jwt");
+    const loader = document.getElementById("loadingScreen");
+
     try {
+        // Mostrar el loader eliminando la clase "hidden"
+        loader.classList.remove("hidden");
+
         const response = await fetch(`${API_BASE_URL}/api/agregarDireccion`, {
             method: 'POST',
             headers: {
@@ -83,9 +88,43 @@ document.getElementById('direccionForm').addEventListener('submit', async functi
         }
 
         const data = await response.json();
-        alert('Dirección agregada con éxito');
+        
+        // Reproducir sonido de éxito y mostrar notificación
+        var successSound = new Audio('../../songs/success.mp3'); 
+        successSound.play().catch(function(error) {
+            console.error("Error al reproducir el sonido de éxito:", error);
+        });
+
         console.log(data);
+        showNotification("Usuario registrado exitosamente", "bg-green-500");
+
     } catch (error) {
         console.error('Error:', error);
+
+        // Reproducir sonido de error
+        var errorSound = new Audio('../../songs/error.mp3'); 
+        errorSound.play().catch(function(playbackError) {
+            console.error("Error al reproducir el sonido de error:", playbackError);
+        });
+
+        showNotification("Ocurrió un error al registrar el usuario", "bg-red-500");
+
+    } finally {
+        // Asegurarse de ocultar el loader agregando la clase "hidden"
+        loader.classList.add("hidden");
     }
 });
+
+function showNotification(message, bgColor) {
+    const notification = document.getElementById("notification");
+    notification.textContent = message;
+    notification.className = `fixed top-4 left-1/2 transform -translate-x-1/2 px-4 py-2 text-white font-semibold text-center ${bgColor} rounded shadow-md z-50`;
+    
+    // Remover la clase 'hidden' para mostrar la notificación
+    notification.classList.remove("hidden");
+
+    // Ocultar la notificación después de 5 segundos
+    setTimeout(() => {
+        notification.classList.add("hidden");
+    }, 5000);
+}

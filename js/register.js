@@ -60,7 +60,7 @@ function submitForm() {
   
     data.rol = 'cliente';
 
-    
+    //Mostrar loader de carga
     document.getElementById("loadingScreen").classList.remove("hidden");
 
     fetch(`${API_BASE_URL}/api/register`, {
@@ -79,9 +79,9 @@ function submitForm() {
             sonido.play().catch(function(error) {
                 console.error("Error al reproducir el sonido:", error);
             });
+            // Ocultar el loader después de la operación
+            document.getElementById("loadingScreen").classList.add("hidden");
             showNotification("Usuario registrado exitosamente", "bg-green-500");
-             // Ocultar el loader después de la operación
-              document.getElementById("loadingScreen").classList.add("hidden");
             form.reset();
             listUsers(); 
         } else {

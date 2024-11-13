@@ -60,19 +60,19 @@
         </div>
     </div>
     
- <!-- Modal agregar carrito -->
-        <div id="modal" class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-        <div class="bg-white p-6 rounded-lg w-80">
-            <h2 id="modalProductName" class="text-xl font-bold mb-4">Producto</h2>
-            <div class="flex items-center justify-center mb-4">
-                <button id="decrementBtn" class="bg-gray-200 px-4 py-2 font-bold">-</button>
-                <input id="cantidadInput" type="text" class="w-12 text-center border mx-2" readonly>
-                <button id="incrementBtn" class="bg-gray-200 px-4 py-2 font-bold">+</button>
-            </div>
-            <button id="addToCartBtn" class="w-full bg-blue-500 text-white font-bold py-2 rounded">Agregar al Carrito</button>
-            <button id="closeModalBtn" class="w-full bg-red-500 text-white font-bold py-2 rounded mt-2">Cerrar</button>
+<!-- Modal agregar carrito -->
+<div id="modal" class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+    <div class="bg-white p-6 rounded-lg w-80">
+        <h2 id="modalProductName" class="text-xl font-bold mb-4">Producto</h2>
+        <div class="flex items-center justify-center mb-4">
+            <button id="decrementBtn" class="bg-gray-200 px-4 py-2 font-bold">-</button>
+            <input id="cantidadInput" type="number" class="w-12 text-center border mx-2" min="1">
+            <button id="incrementBtn" class="bg-gray-200 px-4 py-2 font-bold">+</button>
         </div>
+        <button id="addToCartBtn" class="w-full bg-blue-500 text-white font-bold py-2 rounded">Agregar al Carrito</button>
+        <button id="closeModalBtn" class="w-full bg-red-500 text-white font-bold py-2 rounded mt-2">Cerrar</button>
     </div>
+</div>
 
 
     <!-- Script para cargar productos -->

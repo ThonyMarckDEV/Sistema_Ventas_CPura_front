@@ -90,6 +90,10 @@ function submitProductForm() {
     const form = document.getElementById("productForm");
     const formData = new FormData(form);
 
+    //Mostrar loader de carga
+    document.getElementById("loadingScreen").classList.remove("hidden");
+
+
     fetch(`${API_BASE_URL}/api/agregarProducto`, {
         method: "POST",
         headers: {
@@ -107,6 +111,8 @@ function submitProductForm() {
                 console.error("Error al reproducir el sonido:", error);
             });
             //=============================================================
+             // Ocultar el loader después de la operación
+             document.getElementById("loadingScreen").classList.add("hidden");
             showNotification("Producto agregado exitosamente", "bg-green-500");   
             form.reset();
             listProducts();
@@ -118,6 +124,8 @@ function submitProductForm() {
                  console.error("Error al reproducir el sonido:", error);
              });           
             //=============================================================
+             // Ocultar el loader después de la operación
+             document.getElementById("loadingScreen").classList.add("hidden");
             showNotification(data.message || "Error al agregar producto", "bg-red-500");
         }
     })
@@ -141,6 +149,9 @@ window.updateProduct = function(id) {
     formData.append('idCategoria', idCategoria);
     if (imagen) formData.append('imagen', imagen);
 
+    //Mostrar loader de carga
+    document.getElementById("loadingScreen").classList.remove("hidden");
+
     fetch(`${API_BASE_URL}/api/actualizarProducto/${id}`, {
         method: "POST",
         headers: {
@@ -158,6 +169,8 @@ window.updateProduct = function(id) {
                 console.error("Error al reproducir el sonido:", error);
             });
             //=============================================================
+             // Ocultar el loader después de la operación
+              document.getElementById("loadingScreen").classList.add("hidden");
             showNotification("Producto actualizado exitosamente", "bg-green-500");
             listProducts();
         } else {
@@ -168,6 +181,8 @@ window.updateProduct = function(id) {
                  console.error("Error al reproducir el sonido:", error);
              });           
             //=============================================================
+           // Ocultar el loader después de la operación
+           document.getElementById("loadingScreen").classList.add("hidden");
             showNotification(data.message || "Error al actualizar producto", "bg-red-500");
         }
     })
@@ -176,6 +191,10 @@ window.updateProduct = function(id) {
 
 // Función para eliminar un producto
 window.deleteProduct = function(id) {
+
+     //Mostrar loader de carga
+     document.getElementById("loadingScreen").classList.remove("hidden");
+
     fetch(`${API_BASE_URL}/api/eliminarProducto/${id}`, {
         method: "DELETE",
         headers: {
@@ -192,6 +211,8 @@ window.deleteProduct = function(id) {
                 console.error("Error al reproducir el sonido:", error);
             });
             //=============================================================
+             // Ocultar el loader después de la operación
+             document.getElementById("loadingScreen").classList.add("hidden");
             showNotification("Producto eliminado exitosamente", "bg-green-500");   
             listProducts();
         } else {
@@ -202,6 +223,8 @@ window.deleteProduct = function(id) {
                  console.error("Error al reproducir el sonido:", error);
              });           
             //=============================================================
+             // Ocultar el loader después de la operación
+             document.getElementById("loadingScreen").classList.add("hidden");
             showNotification(data.message || "Error al eliminar producto", "bg-red-500");
         }
     })

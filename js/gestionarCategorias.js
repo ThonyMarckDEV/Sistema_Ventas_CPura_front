@@ -18,6 +18,9 @@ function submitCategoryForm() {
     const form = document.getElementById("categoryForm");
     const formData = new FormData(form);
 
+    //Mostrar loader de carga
+    document.getElementById("loadingScreen").classList.remove("hidden");
+
     fetch(`${API_BASE_URL}/api/agregarCategoria`, {
         method: "POST",
         headers: {
@@ -28,13 +31,13 @@ function submitCategoryForm() {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-                          
             // Reproducir el sonido success
-            var sonido = new Audio('../../songs/success.mp3'); // Asegúrate de que la ruta sea correcta
+            var sonido = new Audio('../../songs/success.mp3'); 
             sonido.play().catch(function(error) {
                 console.error("Error al reproducir el sonido:", error);
             });
-            //=============================================================
+            // Ocultar el loader después de la operación
+            document.getElementById("loadingScreen").classList.add("hidden");
             showNotification("Categoría agregada exitosamente", "bg-green-500");
             form.reset();
             listCategories(); // Actualiza la lista de categorías
@@ -93,6 +96,10 @@ function renderCategoryTable(categories) {
 
 // Función para eliminar una categoría
 function deleteCategory(id) {
+
+    //Mostrar loader de carga
+    document.getElementById("loadingScreen").classList.remove("hidden");
+
     fetch(`${API_BASE_URL}/api/eliminarCategoria/${id}`, {
         method: "DELETE",
         headers: {
@@ -102,12 +109,14 @@ function deleteCategory(id) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-                // Reproducir el sonido success
+            // Reproducir el sonido success
                 var sonido = new Audio('../../songs/success.mp3'); // Asegúrate de que la ruta sea correcta
                 sonido.play().catch(function(error) {
-                    console.error("Error al reproducir el sonido:", error);
-                });
-                //=============================================================        
+                console.error("Error al reproducir el sonido:", error);
+            });
+            //=============================================================       
+            // Ocultar el loader después de la operación
+            document.getElementById("loadingScreen").classList.add("hidden"); 
             showNotification("Categoría eliminada exitosamente", "bg-green-500");
             listCategories(); // Actualiza la lista de categorías
         } else {
@@ -116,7 +125,9 @@ function deleteCategory(id) {
                   sonido.play().catch(function(error) {
                       console.error("Error al reproducir el sonido:", error);
                   });           
-                 //=============================================================            
+                 //=============================================================    
+             // Ocultar el loader después de la operación
+            document.getElementById("loadingScreen").classList.add("hidden");   
             showNotification(data.message || "Error al eliminar categoría", "bg-red-500");
         }
     })
@@ -126,6 +137,11 @@ function deleteCategory(id) {
 function updateCategory(id) {
     const nombreCategoria = document.getElementById(`nombreCategoria-${id}`).value;
     const descripcion = document.getElementById(`descripcion-${id}`).value;
+
+
+    //Mostrar loader de carga
+    document.getElementById("loadingScreen").classList.remove("hidden");
+
 
     fetch(`${API_BASE_URL}/api/actualizarCategoria/${id}`, {
         method: "PUT",
@@ -146,7 +162,9 @@ function updateCategory(id) {
                    sonido.play().catch(function(error) {
                        console.error("Error al reproducir el sonido:", error);
                    });
-                   //=============================================================              
+                   //=============================================================   
+             // Ocultar el loader después de la operación
+            document.getElementById("loadingScreen").classList.add("hidden");     
             showNotification("Categoría actualizada exitosamente", "bg-green-500");
             listCategories(); // Refresca la lista de categorías después de actualizar
         } else {
@@ -155,7 +173,9 @@ function updateCategory(id) {
                  sonido.play().catch(function(error) {
                      console.error("Error al reproducir el sonido:", error);
                  });           
-                //=============================================================             
+                //=============================================================           
+                 // Ocultar el loader después de la operación
+            document.getElementById("loadingScreen").classList.add("hidden");     
             showNotification(data.message || "Error al actualizar categoría", "bg-red-500");
         }
     })

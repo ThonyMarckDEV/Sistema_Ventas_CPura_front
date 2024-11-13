@@ -28,7 +28,6 @@ export function loadCartProducts() {
     .catch(error => console.error("Error al cargar productos del carrito:", error));
 }
 
-// Función para renderizar la tabla del carrito
 function renderCartTable(products) {
     const tableBody = document.querySelector("#cartTableBody");
     tableBody.innerHTML = ""; // Limpia el contenido anterior
@@ -36,14 +35,14 @@ function renderCartTable(products) {
     let total = 0; // Variable para acumular el total del carrito
 
     products.forEach(product => {
-
-        // Verificar y convertir 'precio' y 'cantidad' a número
         const precio = Number(product.precio);
         const cantidad = Number(product.cantidad);
+        const stock = Number(product.stock); // Asegurarse de que 'stock' tenga el valor correcto
 
-        if (isNaN(precio) || isNaN(cantidad)) {
-            console.error(`Precio o cantidad inválidos para el producto ID: ${product.idProducto}`);
-            return; // Salta este producto
+        // Verificación adicional para asegurar que 'stock' es válido
+        if (isNaN(stock)) {
+            console.error(`Error: El stock no es un número válido para el producto ID: ${product.idProducto}`);
+            return; // Salta este producto si el stock no es válido
         }
 
         const subtotal = precio * cantidad;
@@ -54,9 +53,10 @@ function renderCartTable(products) {
         row.innerHTML = `
             <td>${product.nombreProducto}</td>
             <td>
-                <input type="number" min="1" value="${cantidad}" 
+                <input type="number" min="1" value="${cantidad}"
                     data-id="${product.idProducto}" 
-                    class="cantidad-input w-16 px-2 py-1 border rounded">
+                    data-stock="${stock}"
+                    class="cantidad-input w-16 px-2 py-1 border rounded text-center">
             </td>
             <td>$${precio.toFixed(2)}</td>
             <td>$${subtotal.toFixed(2)}</td>
@@ -70,10 +70,8 @@ function renderCartTable(products) {
         tableBody.appendChild(row);
     });
 
-    // Actualizar el total en la interfaz
     document.getElementById("totalPrice").textContent = `$${total.toFixed(2)}`;
 
-    // Añadir eventos a los inputs de cantidad
     const cantidadInputs = document.querySelectorAll(".cantidad-input");
     cantidadInputs.forEach(input => {
         input.addEventListener("change", handleQuantityChange);
@@ -86,26 +84,66 @@ function renderCartTable(products) {
     });
 }
 
-// Función para manejar el cambio de cantidad
 function handleQuantityChange(event) {
     const input = event.target;
     const idProducto = input.getAttribute("data-id");
     const nuevaCantidad = Number(input.value);
+    
+    // Obtener y validar el stock disponible
+    let stockDisponible = Number(input.getAttribute("data-stock"));
+    if (isNaN(stockDisponible)) {
+        showNotification("No se pudo obtener el stock disponible. Intente nuevamente más tarde.", "bg-red-500");
+        
+        const sonidoError = new Audio('../../songs/error.mp3');
+        sonidoError.play().catch(error => console.error("Error al reproducir el sonido:", error));
 
-    if (isNaN(nuevaCantidad) || nuevaCantidad < 1) {
-        alert("Cantidad inválida. Por favor, ingresa un número mayor o igual a 1.");
-        // Restaurar el valor anterior si es inválido
-        input.value = 1;
+        input.value = 1; // Restablecer a 1 en caso de error
         return;
     }
 
+    console.log(`Cantidad ingresada: ${nuevaCantidad}, Stock disponible: ${stockDisponible}`);
+
+    if (isNaN(nuevaCantidad) || nuevaCantidad < 1) {
+        showNotification("Cantidad inválida. Por favor, ingresa un número mayor o igual a 1.", "bg-red-500");
+
+        const sonidoError = new Audio('../../songs/error.mp3');
+        sonidoError.play().catch(error => console.error("Error al reproducir el sonido:", error));
+
+        input.value = 1; // Restablecer a 1 en caso de cantidad no válida
+        return;
+    }
+
+    if (nuevaCantidad > stockDisponible) {
+        showNotification("La cantidad solicitada supera el stock disponible. Restableciendo al máximo permitido.", "bg-red-500");
+
+        const sonidoError = new Audio('../../songs/error.mp3');
+        sonidoError.play().catch(error => console.error("Error al reproducir el sonido:", error));
+
+        input.value = stockDisponible; // Restablece la cantidad al máximo permitido
+        return;
+    }
+
+    // Mostrar el loader antes de la actualización en el backend
+    document.getElementById("loadingScreen").classList.remove("hidden");
+
+    // Realizar la actualización en el backend si la cantidad es válida
     updateQuantity(idProducto, nuevaCantidad);
 }
 
-// Función para actualizar la cantidad de un producto
 function updateQuantity(idProducto, cantidad) {
+    const input = document.querySelector(`input[data-id="${idProducto}"]`);
 
-    // Mostrar el loader al enviar el formulario
+    // Obtener y validar el stock disponible
+    let stockDisponible = Number(input.getAttribute("data-stock"));
+    if (isNaN(stockDisponible)) {
+        console.error(`Error: El stock disponible no es un número válido para el producto ID: ${idProducto}`);
+        alert("No se pudo obtener el stock disponible. Intente nuevamente más tarde.");
+        return;
+    }
+
+    console.log(`Actualizando cantidad a ${cantidad} para el producto ID: ${idProducto}, con stock disponible: ${stockDisponible}`);
+
+    // Mostrar el loader
     document.getElementById("loadingScreen").classList.remove("hidden");
 
     fetch(`${API_BASE_URL}/api/carrito_detalle/${idProducto}`, {
@@ -119,8 +157,14 @@ function updateQuantity(idProducto, cantidad) {
     .then(response => {
         if (!response.ok) {
             return response.json().then(data => {
-                // Ocultar el loader después de la operación
-               document.getElementById("loadingScreen").classList.add("hidden");
+                document.getElementById("loadingScreen").classList.add("hidden");
+
+                if (data.message === "La cantidad solicitada supera el stock disponible") {
+                    alert(data.message);
+                    input.value = stockDisponible; // Restablece al stock disponible máximo
+                    console.log(`Restableciendo cantidad a ${stockDisponible} para el producto ID: ${idProducto}`);
+                }
+                
                 throw new Error(data.message || "Error al actualizar cantidad");
             });
         }
@@ -128,44 +172,36 @@ function updateQuantity(idProducto, cantidad) {
     })
     .then(data => {
         if (data.success) {
-             // Reproducir el sonido success
-             var sonido = new Audio('../../songs/success.mp3'); // Asegúrate de que la ruta sea correcta
-             sonido.play().catch(function(error) {
-                 console.error("Error al reproducir el sonido:", error);
-             });
-             //=============================================================
-            showNotification("Cantidad actualizada exitosamente", "bg-green-500");
-            loadCartProducts(); // Recargar el carrito
-            actualizarCantidadCarrito();
-            // Ocultar el loader después de la operación
-            document.getElementById("loadingScreen").classList.add("hidden");
-        } else {
-            // Reproducir el sonido error
-            var sonido = new Audio('../../songs/error.mp3'); // Asegúrate de que la ruta sea correcta
+            const sonido = new Audio('../../songs/success.mp3'); 
             sonido.play().catch(function(error) {
                 console.error("Error al reproducir el sonido:", error);
             });
-            //=============================================================
-           showNotification("Error al actualizar cantidad", "bg-red-500");
+            showNotification("Cantidad actualizada exitosamente", "bg-green-500");
+            loadCartProducts(); // Recargar el carrito
+            actualizarCantidadCarrito();
+        } else {
+            const sonido = new Audio('../../songs/error.mp3'); 
+            sonido.play().catch(function(error) {
+                console.error("Error al reproducir el sonido:", error);
+            });
+            showNotification("Error al actualizar cantidad", "bg-red-500");
             console.error("Error al actualizar cantidad:", data.message);
-            // Ocultar el loader después de la operación
-            document.getElementById("loadingScreen").classList.add("hidden");
         }
     })
     .catch(error => {
         console.error("Error al actualizar cantidad:", error);
-        // Reproducir el sonido error
-        var sonido = new Audio('../../songs/error.mp3'); // Asegúrate de que la ruta sea correcta
+        const sonido = new Audio('../../songs/error.mp3'); 
         sonido.play().catch(function(error) {
             console.error("Error al reproducir el sonido:", error);
         });
-        //=============================================================
-       showNotification("Error al actualizar cantidad", "bg-red-500");
-       // Ocultar el loader después de la operación
-       document.getElementById("loadingScreen").classList.add("hidden");
-        console.error("Error al actualizar cantidad:", data.message);
+        showNotification("Error al actualizar cantidad", "bg-red-500");
+    })
+    .finally(() => {
+        // Ocultar el loader después de la operación
+        document.getElementById("loadingScreen").classList.add("hidden");
     });
 }
+
 
 // Función para eliminar un producto del carrito
 function removeProduct(idProducto) {

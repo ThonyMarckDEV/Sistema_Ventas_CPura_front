@@ -16,6 +16,10 @@
 </head>
 <body class="bg-gray-100 min-h-screen flex">
 
+    <!-- Notificación -->
+    <div id="notification" class="hidden fixed top-4 left-1/2 transform -translate-x-1/2 px-4 py-2 text-white font-semibold text-center rounded shadow-md z-50"></div>
+        
+
     <!-- Sidebar -->
     <?php include 'sidebarCLIENTE.php'; ?>
 

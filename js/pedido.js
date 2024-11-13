@@ -343,6 +343,31 @@ function renderDetalles(detalles) {
     });
 }
 
+// Función para abrir el modal de estado con línea de tiempo
+function abrirEstadoModal(estadoActual) {
+    const estados = ['aprobando', 'en preparacion', 'enviado', 'completado'];
+    const timeline = document.getElementById('timeline');
+    timeline.innerHTML = '';
+
+    estados.forEach((estado, index) => {
+        const estadoElement = document.createElement('div');
+        estadoElement.className = 'flex flex-col items-center';
+        const isActive = estados.indexOf(estadoActual.toLowerCase()) >= index;
+        
+        estadoElement.innerHTML = `
+            <div class="w-8 h-8 flex items-center justify-center rounded-full ${isActive ? 'bg-green-500' : 'bg-gray-300'}">
+                <span class="text-white font-bold">${index + 1}</span>
+            </div>
+            <p class="mt-2 text-sm ${isActive ? 'text-green-600 font-semibold' : 'text-gray-600'}">${capitalizeFirstLetter(estado)}</p>
+            ${index < estados.length - 1 ? '<div class="h-8 border-l-2 border-gray-300"></div>' : ''}
+        `;
+        timeline.appendChild(estadoElement);
+    });
+
+    document.getElementById('estadoModal').classList.remove('hidden');
+}
+
+
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }

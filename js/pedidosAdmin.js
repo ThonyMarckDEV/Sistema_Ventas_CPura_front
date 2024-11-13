@@ -197,6 +197,9 @@ async function renderPedidos(pedidos) {
 
 function deleteOrder(pedido) {
     if (confirm(`¿Estás seguro de que deseas eliminar el pedido ${pedido.idPedido}? Esta acción no se puede deshacer.`)) {
+
+        document.getElementById("loadingScreen").classList.remove("hidden");
+
         fetch(`${API_BASE_URL}/api/admin/pedidos/${pedido.idPedido}`, {
             method: 'DELETE',
             headers: {
@@ -207,13 +210,34 @@ function deleteOrder(pedido) {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
+                // Reproducir el sonido success
+                var sonido = new Audio('../../songs/success.mp3'); 
+                sonido.play().catch(function(error) {
+                    console.error("Error al reproducir el sonido:", error);
+                });
+                 // Ocultar el loader después de la operación
+                 document.getElementById("loadingScreen").classList.add("hidden");
                 showNotification('Pedido eliminado correctamente', 'bg-green-500');
                 fetchPedidos(); // Actualizar la lista de pedidos
             } else {
+                 // Reproducir el sonido error
+                 var sonido = new Audio('../../songs/error.mp3'); 
+                 sonido.play().catch(function(error) {
+                     console.error("Error al reproducir el sonido:", error);
+                 });
+                  // Ocultar el loader después de la operación
+                  document.getElementById("loadingScreen").classList.add("hidden");
                 showNotification(data.message, 'bg-red-500');
             }
         })
         .catch(error => {
+              // Reproducir el sonido error
+              var sonido = new Audio('../../songs/error.mp3'); 
+              sonido.play().catch(function(error) {
+                  console.error("Error al reproducir el sonido:", error);
+              });
+               // Ocultar el loader después de la operación
+               document.getElementById("loadingScreen").classList.add("hidden");
             console.error('Error al eliminar el pedido:', error);
             showNotification('Error al eliminar el pedido', 'bg-red-500');
         });
@@ -379,6 +403,10 @@ function confirmChangePaymentStatus(pago) {
     const paymentStatusSelect = document.getElementById('paymentStatusSelect');
     const newStatus = paymentStatusSelect.value;
 
+    //Mostrar laoder loading screen
+    document.getElementById("loadingScreen").classList.remove("hidden");
+
+
     if (newStatus && newStatus !== pago.estado_pago.toLowerCase()) {
         fetch(`${API_BASE_URL}/api/admin/pagos/${pago.idPago}`, {
             method: 'PUT',
@@ -391,14 +419,36 @@ function confirmChangePaymentStatus(pago) {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
+                // Reproducir el sonido success
+                var sonido = new Audio('../../songs/success.mp3'); 
+                sonido.play().catch(function(error) {
+                    console.error("Error al reproducir el sonido:", error);
+                });
                 showNotification('Estado de pago actualizado', 'bg-green-500');
+                // Ocultar el loader después de la operación
+                document.getElementById("loadingScreen").classList.add("hidden");
                 paymentInfoModal.classList.add('hidden');
                 fetchPedidos(); 
             } else {
+                 // Reproducir el sonido error
+                 var sonido = new Audio('../../songs/error.mp3'); 
+                 sonido.play().catch(function(error) {
+                     console.error("Error al reproducir el sonido:", error);
+                 });
+                 showNotification('Error al actualziar el estado de pago', 'bg-red-500');
+                 // Ocultar el loader después de la operación
+                document.getElementById("loadingScreen").classList.add("hidden");
                 showNotification(data.message, 'bg-red-500');
             }
         })
         .catch(error => {
+             // Reproducir el sonido error
+             var sonido = new Audio('../../songs/error.mp3'); 
+             sonido.play().catch(function(error) {
+                 console.error("Error al reproducir el sonido:", error);
+             });
+             // Ocultar el loader después de la operación
+             document.getElementById("loadingScreen").classList.add("hidden");
             console.error('Error al actualizar el estado de pago:', error);
             showNotification('Error al actualizar el estado de pago', 'bg-red-500');
         });
@@ -436,6 +486,10 @@ if (confirmOrderStatusButton) {
     confirmOrderStatusButton.addEventListener('click', () => {
         const newEstado = orderStatusSelect.value;
         if (newEstado && newEstado !== selectedPedido.estado.toLowerCase()) {
+
+            //Mostrar laoder loading screen
+            document.getElementById("loadingScreen").classList.remove("hidden");
+
             fetch(`${API_BASE_URL}/api/admin/pedidos/${selectedPedido.idPedido}`, {
                 method: 'PUT',
                 headers: {
@@ -447,14 +501,35 @@ if (confirmOrderStatusButton) {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
+                    // Reproducir el sonido success
+                    var sonido = new Audio('../../songs/success.mp3'); 
+                    sonido.play().catch(function(error) {
+                        console.error("Error al reproducir el sonido:", error);
+                    });
+                    // Ocultar el loader después de la operación
+                    document.getElementById("loadingScreen").classList.add("hidden");
                     showNotification('Estado del pedido actualizado', 'bg-green-500');
                     changeOrderStatusModal.classList.add('hidden');
                     fetchPedidos();
                 } else {
+                    // Reproducir el sonido error
+                    var sonido = new Audio('../../songs/error.mp3'); 
+                    sonido.play().catch(function(error) {
+                        console.error("Error al reproducir el sonido:", error);
+                    });
+                    // Ocultar el loader después de la operación
+                    document.getElementById("loadingScreen").classList.add("hidden");
                     showNotification(data.message, 'bg-red-500');
                 }
             })
             .catch(error => {
+                 // Reproducir el sonido error
+                 var sonido = new Audio('../../songs/error.mp3'); 
+                 sonido.play().catch(function(error) {
+                     console.error("Error al reproducir el sonido:", error);
+                 });
+                 // Ocultar el loader después de la operación
+                 document.getElementById("loadingScreen").classList.add("hidden");
                 console.error('Error al actualizar el estado del pedido:', error);
                 showNotification('Error al actualizar el estado del pedido', 'bg-red-500');
             });
