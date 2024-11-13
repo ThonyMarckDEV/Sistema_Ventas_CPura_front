@@ -12,7 +12,7 @@ const temporaryEmailDomains = [
     '10minutemail.com',
     'temp-mail.org',
     'mailinator.com',
-    // Agrega más dominios según sea necesario
+    
 ];
 
 function isTemporaryEmail(email) {
