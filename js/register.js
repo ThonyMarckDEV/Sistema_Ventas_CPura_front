@@ -1,6 +1,8 @@
 import API_BASE_URL from './urlHelper.js';
 import { listUsers } from './gestionarUsuarios.js';
 
+import { verificarYRenovarToken } from './authToken.js';
+
 // Obtener el JWT del localStorage
 const token = localStorage.getItem("jwt");
 
@@ -47,7 +49,11 @@ function validateFormData(data) {
     return true;
 }
 
-function submitForm() {
+async function submitForm() {
+
+    // Verificar y renovar el token antes de cualquier solicitud
+    await verificarYRenovarToken();
+
     const form = document.getElementById("userForm");
     const formData = new FormData(form);
     const data = Object.fromEntries(formData.entries());

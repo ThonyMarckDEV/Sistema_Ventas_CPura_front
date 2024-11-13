@@ -1,5 +1,7 @@
 import API_BASE_URL from './urlHelper.js';
 
+import { verificarYRenovarToken } from './authToken.js';
+
 // Función para descifrar el JWT y obtener el payload
 function parseJwt(token) {
     const base64Url = token.split('.')[1];
@@ -12,6 +14,10 @@ function parseJwt(token) {
 }
 
 export async function actualizarCantidadCarrito() {
+    
+  // Verificar y renovar el token antes de cualquier solicitud
+  await verificarYRenovarToken();
+  
     const token = localStorage.getItem("jwt");
 
     if (!token) {

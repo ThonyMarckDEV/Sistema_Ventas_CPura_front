@@ -4,6 +4,8 @@ import { actualizarCantidadCarrito } from './contadorCarrito.js';
 const token = localStorage.getItem("jwt");
 
 
+import { verificarYRenovarToken } from './authToken.js';
+
 // Función para obtener el payload del token
 function getTokenPayload() {
     const token = localStorage.getItem('jwt');
@@ -27,6 +29,10 @@ function getTokenPayload() {
 
 // Función para verificar las direcciones del usuario
 async function verificarDireccionUsuario() {
+
+    // Verificar y renovar el token antes de cualquier solicitud
+    await verificarYRenovarToken();
+
     const payload = getTokenPayload();
     if (!payload) {
         showNotification("Error: No se encontró el token", "bg-red-500");
@@ -78,6 +84,10 @@ async function verificarDireccionUsuario() {
 
 // Función para proceder al pago
 async function proceedToCheckout() {
+
+    // Verificar y renovar el token antes de cualquier solicitud
+    await verificarYRenovarToken();
+    
     const totalText = document.getElementById("totalPrice").textContent;
     const total = parseFloat(totalText.replace('$', '').replace(',', ''));
     const payload = getTokenPayload();

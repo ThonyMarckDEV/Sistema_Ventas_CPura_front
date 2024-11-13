@@ -1,10 +1,14 @@
 import API_BASE_URL from './urlHelper.js';
 import { actualizarCantidadCarrito } from './contadorCarrito.js';
 const token = localStorage.getItem("jwt");
-
+import { verificarYRenovarToken } from './authToken.js';
 
 // Función para cargar los productos del carrito
-export function loadCartProducts() {
+export async function loadCartProducts() {
+
+    // Verificar y renovar el token antes de cualquier solicitud
+    await verificarYRenovarToken();
+
     fetch(`${API_BASE_URL}/api/carrito`, {
         method: "GET",
         headers: {
@@ -130,7 +134,11 @@ function handleQuantityChange(event) {
     updateQuantity(idProducto, nuevaCantidad);
 }
 
-function updateQuantity(idProducto, cantidad) {
+async function updateQuantity(idProducto, cantidad) {
+
+        // Verificar y renovar el token antes de cualquier solicitud
+        await verificarYRenovarToken();
+
     const input = document.querySelector(`input[data-id="${idProducto}"]`);
 
     // Obtener y validar el stock disponible
@@ -204,7 +212,11 @@ function updateQuantity(idProducto, cantidad) {
 
 
 // Función para eliminar un producto del carrito
-function removeProduct(idProducto) {
+async function removeProduct(idProducto) {
+
+    // Verificar y renovar el token antes de cualquier solicitud
+    await verificarYRenovarToken();
+
     if (!confirm("¿Estás seguro de que deseas eliminar este producto del carrito?")) {
         return;
     }

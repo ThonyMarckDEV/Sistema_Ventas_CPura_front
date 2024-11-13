@@ -2,6 +2,7 @@ import API_BASE_URL from './urlHelper.js';
 
 export async function logout() {
 
+
     const token = localStorage.getItem("jwt");
 
     const decodedToken = parseJwt(token);

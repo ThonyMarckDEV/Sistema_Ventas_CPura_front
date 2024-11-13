@@ -1,7 +1,12 @@
 import API_BASE_URL from './urlHelper.js';
 
+import { verificarYRenovarToken } from './authToken.js';
 
 export async function actualizarCantidadPedidosAdmin() { // Cambiado a Admin
+
+    // Verificar y renovar el token antes de cualquier solicitud
+    await verificarYRenovarToken();
+
     const token = localStorage.getItem("jwt");
 
     if (!token) {

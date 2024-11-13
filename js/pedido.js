@@ -1,5 +1,8 @@
 import API_BASE_URL from './urlHelper.js';
 
+
+import { verificarYRenovarToken } from './authToken.js';
+
 // Obtener el token JWT desde localStorage
 const token = localStorage.getItem('jwt');
 
@@ -63,6 +66,10 @@ function showNotification(message, bgColor) {
 
 // Función para obtener los pedidos desde la API
 async function fetchPedidos() {
+
+    // Verificar y renovar el token antes de cualquier solicitud
+    await verificarYRenovarToken();
+
     if (!idUsuario) {
         showNotification('Error: idUsuario no disponible.', 'bg-red-500');
         return;
@@ -149,6 +156,10 @@ function renderPedidos(pedidos) {
 
 // Función para obtener la dirección del pedido
 async function obtenerDireccionPedido(idPedido) {
+
+        // Verificar y renovar el token antes de cualquier solicitud
+        await verificarYRenovarToken();
+
     try {
         const response = await fetch(`${API_BASE_URL}/api/obtenerDireccionPedidoUser/${idPedido}`, {
             method: 'GET',
@@ -240,7 +251,11 @@ function validarArchivoAdjunto() {
 
 // Confirmar el tipo de pago y adjuntar comprobante
 if (confirmPaymentTypeButton) {
-    confirmPaymentTypeButton.addEventListener('click', () => {
+    confirmPaymentTypeButton.addEventListener('click', async () => {
+
+        // Verificar y renovar el token antes de cualquier solicitud
+         await verificarYRenovarToken();
+
         const selectedMethod = paymentMethodSelect.value;
 
         // Si es Yape o Plin, validamos el archivo adjunto y enviamos con comprobante
@@ -252,6 +267,8 @@ if (confirmPaymentTypeButton) {
             const formData = new FormData();
             formData.append('comprobante', comprobanteFileInput.files[0]);
             formData.append('metodo_pago', selectedMethod);
+
+  
 
             document.getElementById("loadingScreen").classList.remove("hidden");
 

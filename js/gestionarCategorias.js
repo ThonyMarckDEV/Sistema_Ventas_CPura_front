@@ -1,5 +1,7 @@
 import API_BASE_URL from './urlHelper.js';
 
+import { verificarYRenovarToken } from './authToken.js';
+
 const token = localStorage.getItem("jwt");
 let categories = []; // Variable global para almacenar las categorías cargadas
 // Mostrar notificación
@@ -14,7 +16,11 @@ function showNotification(message, bgColor) {
 }
 
 // Enviar el formulario de categoría
-function submitCategoryForm() {
+async function submitCategoryForm() {
+
+    // Verificar y renovar el token antes de cualquier solicitud
+    await verificarYRenovarToken();
+
     const form = document.getElementById("categoryForm");
     const formData = new FormData(form);
 
@@ -55,7 +61,11 @@ function submitCategoryForm() {
 }
 
 // Cargar y listar categorías
-function listCategories() {
+async function listCategories() {
+
+    // Verificar y renovar el token antes de cualquier solicitud
+    await verificarYRenovarToken();
+
     fetch(`${API_BASE_URL}/api/listarCategorias`, {
         headers: {
             "Authorization": `Bearer ${token}`
@@ -95,7 +105,10 @@ function renderCategoryTable(categories) {
 }
 
 // Función para eliminar una categoría
-function deleteCategory(id) {
+async function deleteCategory(id) {
+
+     // Verificar y renovar el token antes de cualquier solicitud
+    await verificarYRenovarToken();
 
     //Mostrar loader de carga
     document.getElementById("loadingScreen").classList.remove("hidden");
@@ -134,7 +147,11 @@ function deleteCategory(id) {
     .catch(error => console.error("Error al eliminar categoría:", error));
 }
 
-function updateCategory(id) {
+async function updateCategory(id) {
+
+    // Verificar y renovar el token antes de cualquier solicitud
+    await verificarYRenovarToken();
+
     const nombreCategoria = document.getElementById(`nombreCategoria-${id}`).value;
     const descripcion = document.getElementById(`descripcion-${id}`).value;
 

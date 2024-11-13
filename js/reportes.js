@@ -1,10 +1,16 @@
 import API_BASE_URL from './urlHelper.js';
 
+import { verificarYRenovarToken } from './authToken.js';
+
 // Obtener el token JWT desde localStorage
 const token = localStorage.getItem('jwt');
 
 // Función para cargar datos de la API con autenticación
 async function fetchData(endpoint) {
+
+    // Verificar y renovar el token antes de cualquier solicitud
+    await verificarYRenovarToken();
+
     try {
         const response = await fetch(`${API_BASE_URL}/api/${endpoint}`, {
             method: 'GET',
@@ -32,6 +38,8 @@ async function fetchCantidadPagosCompletados() {
 
 // Generar los gráficos
 async function generarReportes() {
+    // Verificar y renovar el token antes de cualquier solicitud
+    await verificarYRenovarToken();
     // Cargar datos desde las APIs
     const ventasData = await fetchData('reportes/total-ingresos');
     const pedidosData = await fetchData('reportes/total-pedidos-completados');

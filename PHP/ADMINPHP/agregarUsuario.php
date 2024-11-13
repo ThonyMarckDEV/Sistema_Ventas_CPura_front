@@ -57,10 +57,13 @@
                     <input type="text" id="apellidos" name="apellidos" required class="w-full px-2 py-1 sm:px-4 sm:py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
 
-                <!-- DNI -->
+               <!-- DNI -->
                 <div>
                     <label for="dni" class="block text-gray-700 font-semibold">DNI</label>
-                    <input type="text" id="dni" name="dni" maxlength="8" required class="w-full px-2 py-1 sm:px-4 sm:py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <input type="text" id="dni" name="dni" maxlength="8" required 
+                        pattern="\d{8}" 
+                        title="Ingrese un DNI de 8 dígitos"
+                        class="w-full px-2 py-1 sm:px-4 sm:py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
 
                 <!-- Correo -->
@@ -69,14 +72,18 @@
                     <input type="email" id="correo" name="correo" required class="w-full px-2 py-1 sm:px-4 sm:py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
                  <!-- Edad -->
-                <div>
+                 <div>
                     <label for="edad" class="block text-gray-700 font-semibold">Edad</label>
-                    <input type="text" id="edad" name="edad" required class="w-full px-2 py-1 sm:px-4 sm:py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <input type="number" id="edad" name="edad" required min="1" max="120"
+                        class="w-full px-2 py-1 sm:px-4 sm:py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
-                <!-- Teléfono -->
+               <!-- Teléfono -->
                 <div>
                     <label for="telefono" class="block text-gray-700 font-semibold">Teléfono</label>
-                    <input type="text" id="telefono" name="telefono" required class="w-full px-2 py-1 sm:px-4 sm:py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <input type="text" id="telefono" name="telefono" maxlength="9" required 
+                        pattern="\d{9}" 
+                        title="Ingrese un número de teléfono de 9 dígitos"
+                        class="w-full px-2 py-1 sm:px-4 sm:py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                 </div>
 
                 <!-- Departamento -->

@@ -1,5 +1,8 @@
 import API_BASE_URL from './urlHelper.js';
 
+
+import { verificarYRenovarToken } from './authToken.js';
+
 // Agregar un evento para verificar el token almacenado al cargar la página
 document.addEventListener("DOMContentLoaded", checkStoredToken);
 

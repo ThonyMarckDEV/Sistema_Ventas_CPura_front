@@ -38,8 +38,7 @@ RewriteCond %{REQUEST_URI} !/contadorPedidosAdmin.js$ [NC]
 
 
 # AUTH JS
-RewriteCond %{REQUEST_URI} !/checkRole.js$ [NC]
-RewriteCond %{REQUEST_URI} !/checkTokenInterval.js$ [NC]
+RewriteCond %{REQUEST_URI} !/checkRoleandtokenInterval.js$ [NC]
 RewriteCond %{REQUEST_URI} !/checkStorageTokenINDEX.js$ [NC]
 RewriteCond %{REQUEST_URI} !/lastActivity.js$ [NC]
 RewriteCond %{REQUEST_URI} !/sessionManager.js$ [NC]
@@ -47,7 +46,7 @@ RewriteCond %{REQUEST_URI} !/checkInactivity.js$ [NC]
 RewriteCond %{REQUEST_URI} !/click-sound.js$ [NC]
 RewriteCond %{REQUEST_URI} !/typing-sound.js$ [NC]
 RewriteCond %{REQUEST_URI} !/loader.js$ [NC]
-
+RewriteCond %{REQUEST_URI} !/authToken.js$ [NC]
 
 # Redirigir todas las demás solicitudes a /index.php
 RewriteRule ^.*$ /index.php [L,R=302]

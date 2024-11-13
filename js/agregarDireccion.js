@@ -2,6 +2,8 @@
 
 import API_BASE_URL from './urlHelper.js';
 
+import { verificarYRenovarToken } from './authToken.js';
+
 // Definir initMap como una función global para que Google Maps la reconozca
 window.initMap = function() {
     let map, marker;
@@ -62,6 +64,10 @@ window.initMap = function() {
 
 // Enviar los datos del formulario al servidor
 document.getElementById('direccionForm').addEventListener('submit', async function (e) {
+
+    // Verificar y renovar el token antes de cualquier solicitud
+    await verificarYRenovarToken();
+
     e.preventDefault();
 
     const formData = new FormData(e.target);

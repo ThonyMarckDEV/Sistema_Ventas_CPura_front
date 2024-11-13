@@ -54,7 +54,8 @@ function validateFormData(data) {
     return true;
 }
 
-function submitRegisterForm() {
+async function submitRegisterForm() {
+
     const form = document.getElementById("userForm");
     const formData = new FormData(form);
     const data = Object.fromEntries(formData.entries());

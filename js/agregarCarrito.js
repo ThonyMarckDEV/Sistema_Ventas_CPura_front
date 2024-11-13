@@ -1,6 +1,11 @@
 import API_BASE_URL from './urlHelper.js';
 import { actualizarCantidadCarrito } from './contadorCarrito.js';
 
+import { verificarYRenovarToken } from './authToken.js';
+
+// Verificar y renovar el token antes de cualquier solicitud
+await verificarYRenovarToken();
+
 let selectedProductId = null;
 
 let selectedProductStock = 0; 
@@ -24,6 +29,7 @@ function hideModal() {
 
 // Actualizar la cantidad en el input
 function updateCantidad(increment) {
+    
     const cantidadInput = document.getElementById("cantidadInput");
     let cantidad = parseInt(cantidadInput.value) || 1;
     cantidad = increment ? cantidad + 1 : cantidad - 1;
@@ -57,6 +63,9 @@ function parseJwt(token) {
 
 // Función para agregar el producto al carrito
 export async function agregarAlCarrito() {
+    // Verificar y renovar el token antes de cualquier solicitud
+    await verificarYRenovarToken();
+    
     const token = localStorage.getItem("jwt");
     const cantidad = parseInt(document.getElementById("cantidadInput").value);
 

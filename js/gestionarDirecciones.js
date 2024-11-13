@@ -1,6 +1,8 @@
 
 import API_BASE_URL from './urlHelper.js';
 
+import { verificarYRenovarToken } from './authToken.js';
+
 // Obtener el token JWT desde localStorage
 const token = localStorage.getItem('jwt');
 
@@ -28,6 +30,10 @@ const idUsuario = decodedToken ? decodedToken.idUsuario : null;
 
 // Función para cargar direcciones del usuario
 async function loadDirecciones() {
+
+    // Verificar y renovar el token antes de cualquier solicitud
+    await verificarYRenovarToken();
+
     if (!idUsuario) {
         console.error("idUsuario no encontrado en el token");
         return;
@@ -87,6 +93,10 @@ function closeMapModal() {
 
 // Función para establecer una dirección como "usando"
 async function setUsando(idDireccion) {
+
+    // Verificar y renovar el token antes de cualquier solicitud
+    await verificarYRenovarToken();
+
     const loader = document.getElementById("loadingScreen");
     const token = localStorage.getItem("jwt");
 
@@ -135,6 +145,10 @@ async function setUsando(idDireccion) {
 
 
 async function eliminarDireccion(idDireccion) {
+
+     // Verificar y renovar el token antes de cualquier solicitud
+     await verificarYRenovarToken();
+
     const loader = document.getElementById("loadingScreen");
     const token = localStorage.getItem("jwt");
 

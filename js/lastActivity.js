@@ -1,8 +1,14 @@
 import API_BASE_URL from './urlHelper.js';
 
+import { verificarYRenovarToken } from './authToken.js';
+
 const token = localStorage.getItem('jwt'); 
 
-function updateLastActivity() {
+async function updateLastActivity() {
+
+    // Verificar y renovar el token antes de cualquier solicitud
+    await verificarYRenovarToken();
+
     if (token) {
         const decoded = jwt_decode(token);
         const userId = decoded.idUsuario; 

@@ -116,7 +116,7 @@
   <?php include '../loader.php'; ?>
   
 <!-- Cargar el archivo JavaScript en todas las páginas -->
-<script type="module" src="../../js/checkTokenInterval.js"></script>
+<!-- <script type="module" src="../../js/checkTokenInterval.js"></script> -->
 
 <!-- Overlay de Carga Fijo -->
 <div id="loadingOverlay" class="fixed inset-0 flex items-center justify-center bg-white hidden z-50" style="width: 100vw; height: 100vh;">
@@ -125,7 +125,7 @@
 
 <script src="../../js/loadingOverlay.js"></script>
 <!-- Incluir el script de autenticación y el script para el botón de menú -->
-<script type="module" src="../../js/checkRole.js"></script>
+<script type="module" src="../../js/checkRoleandtokenInterval.js"></script>
 <!-- Script para manejar el cierre de sesión -->
 <script type="module" src="../../js/logout.js"></script>
 <!-- Cargar el archivo JavaScript en todas las páginas -->

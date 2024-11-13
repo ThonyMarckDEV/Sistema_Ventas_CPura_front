@@ -1,10 +1,17 @@
 import API_BASE_URL from './urlHelper.js';
 
+
+import { verificarYRenovarToken } from './authToken.js';
+
 const token = localStorage.getItem("jwt");
 let categorias = []; // Declaración global de la variable `categorias`
 
 // Cargar categorías para el select
-function loadCategories() {
+async function loadCategories() {
+
+    // Verificar y renovar el token antes de cualquier solicitud
+    await verificarYRenovarToken();
+
     fetch(`${API_BASE_URL}/api/listarCategorias`, {
         headers: {
             "Authorization": `Bearer ${token}`
@@ -33,7 +40,11 @@ function loadCategories() {
 }
 
 // Función para listar productos
-function listProducts() {
+async function listProducts() {
+
+    // Verificar y renovar el token antes de cualquier solicitud
+    await verificarYRenovarToken();
+
     fetch(`${API_BASE_URL}/api/listarProductos`, {
         headers: {
             "Authorization": `Bearer ${token}`
@@ -86,7 +97,11 @@ function renderProductTable(products) {
 
 
 // Función para enviar el formulario de producto
-function submitProductForm() {
+async function submitProductForm() {
+    
+    // Verificar y renovar el token antes de cualquier solicitud
+    await verificarYRenovarToken();
+
     const form = document.getElementById("productForm");
     const formData = new FormData(form);
 
@@ -133,7 +148,11 @@ function submitProductForm() {
 }
 
 // Función para actualizar un producto con método PUT
-window.updateProduct = function(id) {
+window.updateProduct = async function(id) {
+
+    // Verificar y renovar el token antes de cualquier solicitud
+    await verificarYRenovarToken();
+
     const nombreProducto = document.getElementById(`nombreProducto-${id}`).value;
     const descripcion = document.getElementById(`descripcion-${id}`).value;
     const precio = parseFloat(document.getElementById(`precio-${id}`).value);
@@ -151,6 +170,7 @@ window.updateProduct = function(id) {
 
     //Mostrar loader de carga
     document.getElementById("loadingScreen").classList.remove("hidden");
+    
 
     fetch(`${API_BASE_URL}/api/actualizarProducto/${id}`, {
         method: "POST",
@@ -190,7 +210,10 @@ window.updateProduct = function(id) {
 };
 
 // Función para eliminar un producto
-window.deleteProduct = function(id) {
+window.deleteProduct = async function(id) {
+
+    // Verificar y renovar el token antes de cualquier solicitud
+    await verificarYRenovarToken();
 
      //Mostrar loader de carga
      document.getElementById("loadingScreen").classList.remove("hidden");

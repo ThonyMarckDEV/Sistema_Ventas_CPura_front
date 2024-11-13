@@ -1,12 +1,17 @@
 import API_BASE_URL from './urlHelper.js';
 import { agregarAlCarrito  } from './agregarCarrito.js';
 
+import { verificarYRenovarToken } from './authToken.js';
 
 document.addEventListener("DOMContentLoaded", () => {
     fetchProductos();
 });
 
 async function fetchProductos() {
+
+    // Verificar y renovar el token antes de cualquier solicitud
+    await verificarYRenovarToken();
+
     const token = localStorage.getItem("jwt"); 
 
     try {

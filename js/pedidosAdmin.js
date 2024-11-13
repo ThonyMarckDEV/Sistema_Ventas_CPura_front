@@ -1,5 +1,8 @@
 import API_BASE_URL from './urlHelper.js';
 import { actualizarCantidadPedidosAdmin } from './contadorPedidosAdmin.js';
+
+import { verificarYRenovarToken } from './authToken.js';
+
 // Obtener el token JWT desde localStorage
 const token = localStorage.getItem('jwt');
 
@@ -71,6 +74,10 @@ function showNotification(message, bgColor) {
 
 // Función para obtener todos los pedidos desde la API
 async function fetchPedidos() {
+
+    // Verificar y renovar el token antes de cualquier solicitud
+    await verificarYRenovarToken();
+
     try {
         const response = await fetch(`${API_BASE_URL}/api/admin/pedidos`, {
             method: 'GET',
@@ -93,6 +100,10 @@ async function fetchPedidos() {
 }
 
 async function renderPedidos(pedidos) {
+
+    // Verificar y renovar el token antes de cualquier solicitud
+    await verificarYRenovarToken();
+    
     pedidosContainer.innerHTML = '';
 
     for (const pedido of pedidos) {
@@ -195,7 +206,11 @@ async function renderPedidos(pedidos) {
 }
 
 
-function deleteOrder(pedido) {
+async function deleteOrder(pedido) {
+
+    // Verificar y renovar el token antes de cualquier solicitud
+    await verificarYRenovarToken();
+
     if (confirm(`¿Estás seguro de que deseas eliminar el pedido ${pedido.idPedido}? Esta acción no se puede deshacer.`)) {
 
         document.getElementById("loadingScreen").classList.remove("hidden");
@@ -400,7 +415,11 @@ if (closePaymentInfoModalButton) {
 }
 
 // Función para confirmar el cambio de estado de pago
-function confirmChangePaymentStatus(pago) {
+async function confirmChangePaymentStatus(pago) {
+
+    // Verificar y renovar el token antes de cualquier solicitud
+    await verificarYRenovarToken();
+
     const paymentStatusSelect = document.getElementById('paymentStatusSelect');
     const newStatus = paymentStatusSelect.value;
 
@@ -484,7 +503,11 @@ if (closeChangeOrderStatusModal) {
 
 // Evento para confirmar el cambio de estado del pedido
 if (confirmOrderStatusButton) {
-    confirmOrderStatusButton.addEventListener('click', () => {
+    confirmOrderStatusButton.addEventListener('click', async () => {
+
+        // Verificar y renovar el token antes de cualquier solicitud
+        await verificarYRenovarToken();
+
         const newEstado = orderStatusSelect.value;
         if (newEstado && newEstado !== selectedPedido.estado.toLowerCase()) {
 
@@ -542,6 +565,10 @@ if (confirmOrderStatusButton) {
 }
 
 async function obtenerDireccionPedido(idPedido) {
+
+        // Verificar y renovar el token antes de cualquier solicitud
+        await verificarYRenovarToken();
+        
     try {
         const response = await fetch(`${API_BASE_URL}/api/obtenerDireccionPedido/${idPedido}`, {
             method: 'GET',

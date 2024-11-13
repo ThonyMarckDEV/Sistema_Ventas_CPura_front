@@ -1,5 +1,7 @@
 import API_BASE_URL from './urlHelper.js';
 
+import { verificarYRenovarToken } from './authToken.js';
+
 // Obtener el token JWT del localStorage
 const token = localStorage.getItem("jwt");
 
@@ -7,7 +9,11 @@ const token = localStorage.getItem("jwt");
 let usuarios = [];
 
 // Función para listar usuarios
-export function listUsers() {
+export async function listUsers() {
+
+    // Verificar y renovar el token antes de cualquier solicitud
+    await verificarYRenovarToken();
+
     fetch(`${API_BASE_URL}/api/listarUsuarios`, {
         method: "GET",
         headers: {
@@ -73,7 +79,10 @@ function renderUserTable(users) {
 }
 
 // Función para eliminar usuario con token
-function deleteUser(userId) {
+async function deleteUser(userId) {
+
+        // Verificar y renovar el token antes de cualquier solicitud
+        await verificarYRenovarToken();
 
     // Mostrar el loader al enviar el formulario
     document.getElementById("loadingScreen").classList.remove("hidden");
@@ -119,7 +128,11 @@ function deleteUser(userId) {
 }
 
 // Función para actualizar usuario con token
-function updateUser(userId) {
+async function updateUser(userId) {
+
+    // Verificar y renovar el token antes de cualquier solicitud
+    await verificarYRenovarToken();
+
     const username = document.getElementById(`username-${userId}`).value;
     const rol = document.getElementById(`rol-${userId}`).value;
     const correo = document.getElementById(`correo-${userId}`).value;
