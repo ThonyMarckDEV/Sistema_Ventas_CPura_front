@@ -82,12 +82,9 @@ async function verificarDireccionUsuario() {
     }
 }
 
-// Función para proceder al pago
 async function proceedToCheckout() {
-
-    // Verificar y renovar el token antes de cualquier solicitud
     await verificarYRenovarToken();
-    
+
     const totalText = document.getElementById("totalPrice").textContent;
     const total = parseFloat(totalText.replace('$', '').replace(',', ''));
     const payload = getTokenPayload();
@@ -106,7 +103,6 @@ async function proceedToCheckout() {
     }
 
     try {
-        // Obtener la dirección en uso
         const direccionResponse = await fetch(`${API_BASE_URL}/api/listarDireccion/${idUsuario}`, {
             method: 'GET',
             headers: {
@@ -122,7 +118,6 @@ async function proceedToCheckout() {
             return;
         }
 
-        // Enviar la solicitud de pedido con idDireccion
         document.getElementById("loadingScreen").classList.remove("hidden");
 
         const response = await fetch(`${API_BASE_URL}/api/pedido`, {
@@ -134,8 +129,6 @@ async function proceedToCheckout() {
             body: JSON.stringify({ total, idCarrito, idUsuario, idDireccion: direccionUsando.idDireccion })
         });
 
-        document.getElementById("loadingScreen").classList.add("hidden");
-
         if (!response.ok) {
             throw new Error("Error al proceder al pedido");
         }
@@ -145,19 +138,30 @@ async function proceedToCheckout() {
         if (data.success) {
             new Audio('../../songs/success.mp3').play();
             showNotification("Pedido realizado con éxito", "bg-green-500");
-            window.open(`${API_BASE_URL}/boleta/${data.idPedido}`, '_blank');
+
+            const boletaWindow = window.open(`${API_BASE_URL}/boleta/${data.idPedido}`, '_blank');
+
+            // Escuchar el mensaje de la ventana de la boleta
+            window.addEventListener('message', (event) => {
+                if (event.data === 'boletaCargada') {
+                    document.getElementById("loadingScreen").classList.add("hidden");
+                }
+            });
+
             clearCartUI();
             actualizarCantidadPedido();
             actualizarCantidadCarrito();
         } else {
             new Audio('../../songs/error.mp3').play();
             showNotification("Error al proceder al pedido", "bg-red-500");
+            document.getElementById("loadingScreen").classList.add("hidden");
         }
     } catch (error) {
         document.getElementById("loadingScreen").classList.add("hidden");
         showNotification("Error al proceder al pedido", "bg-red-500");
     }
 }
+
 
 // Función para mostrar notificaciones
 function showNotification(message, bgColor) {
