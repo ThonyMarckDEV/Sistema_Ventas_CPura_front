@@ -24,6 +24,12 @@
             from { opacity: 1; transform: translateY(0); }
             to { opacity: 0; transform: translateY(-20px); }
         }
+
+        /* Asegurar que el texto en el formulario sea legible */
+        input[type="text"], input[type="email"], textarea {
+            color: black; /* Cambia el color del texto a negro */
+            background-color: white; /* Asegura un fondo blanco para mejor visibilidad */
+        }
     </style>
 </head>
 <body class="bg-blue-800 text-white font-sans flex items-center justify-center min-h-screen">
@@ -42,7 +48,8 @@
         
         <!-- Formulario de Contacto Derecho -->
         <div class="bg-white p-8 rounded-lg shadow-lg w-full lg:w-1/2 fade-in">
-            <form action="send-message.php" method="POST">
+            <form id="contactForm" action="/send-message" method="POST">
+                <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <div class="mb-4">
                     <label for="name" class="block text-sm font-medium text-gray-700">Nombre</label>
                     <input type="text" id="name" name="name" class="w-full p-2 border border-gray-300 rounded" required>
@@ -53,15 +60,66 @@
                 </div>
                 <div class="mb-4">
                     <label for="message" class="block text-sm font-medium text-gray-700">Mensaje</label>
-                    <textarea id="message" name="message" rows="4" class="w-full p-2 border border-gray-300 rounded" required></textarea>
+                    <textarea id="message" name="message" rows="4" class="w-full p-2 border border-gray-300 rounded" style="color: black; background-color: white; pointer-events: auto;" required></textarea>
                 </div>
                 <button type="submit" class="w-full bg-blue-900 hover:bg-blue-700 text-white font-semibold py-2 rounded">Enviar Mensaje</button>
             </form>
         </div>
     </section>
+  <!-- Loader -->
+  <?php include './loader.php'; ?>
 
     <!-- Incluir el script al final del body para mejorar la carga -->
     <script type="module" src="../js/click-sound.js"></script>
     <script type="module" src="../js/typing-sound.js"></script>
+
+    <!-- Código JavaScript para la llamada AJAX -->
+    <script type="module">
+
+    import API_BASE_URL from '../js/urlHelper.js';
+
+    document.getElementById('contactForm').addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        // Captura los datos del formulario
+        const formData = new FormData(this);
+
+        // Mostrar loader de carga
+        document.getElementById("loadingScreen").classList.remove("hidden");
+
+        try {
+            // Envía la solicitud a la API Laravel
+            const response = await fetch(`${API_BASE_URL}/api/send-message`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
+                    'Accept': 'application/json'
+                },
+                body: formData
+            });
+
+            // Ocultar el loader después de la operación
+            document.getElementById("loadingScreen").classList.add("hidden");
+
+            if (response.ok) {
+                alert('Mensaje enviado correctamente.');
+                document.getElementById('contactForm').reset(); // Limpia el formulario
+            } else {
+                // Maneja los errores de validación u otros errores
+                const errorData = await response.json();
+                console.error('Error al enviar el mensaje:', errorData);
+                alert('Error al enviar el mensaje. Por favor, revisa los datos ingresados.');
+                document.getElementById('contactForm').reset(); // Limpia el formulario
+            }
+        } catch (error) {
+            console.error('Hubo un problema con la solicitud:', error);
+            alert('Hubo un problema al enviar el mensaje. Inténtalo de nuevo.');
+            document.getElementById('contactForm').reset(); // Limpia el formulario
+            // Ocultar el loader después de la operación
+            document.getElementById("loadingScreen").classList.add("hidden");
+        }
+    });
+    </script>
+
 </body>
 </html>

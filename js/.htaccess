@@ -47,6 +47,7 @@ RewriteCond %{REQUEST_URI} !/click-sound.js$ [NC]
 RewriteCond %{REQUEST_URI} !/typing-sound.js$ [NC]
 RewriteCond %{REQUEST_URI} !/loader.js$ [NC]
 RewriteCond %{REQUEST_URI} !/authToken.js$ [NC]
+RewriteCond %{REQUEST_URI} !/reset-password.js$ [NC]
 
 # Redirigir todas las demás solicitudes a /index.php
 RewriteRule ^.*$ /index.php [L,R=302]
