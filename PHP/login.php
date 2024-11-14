@@ -48,10 +48,11 @@
         </div>
     </div>
 
-    <!-- Loader -->
-    <div id="loadingScreen" class="hidden fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-        <div class="loader"></div>
+    <!-- loader.php -->
+    <div id="loadingScreen" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center" style="z-index: 99999;">
+        <div class="loader animate-spin rounded-full h-16 w-16 border-4 border-solid border-blue-500 border-t-transparent"></div>
     </div>
+
 
     <!-- Modal para Solicitar Código de Verificación -->
     <div id="resetPasswordModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center">
