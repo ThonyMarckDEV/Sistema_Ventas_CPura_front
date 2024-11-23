@@ -26,12 +26,6 @@ function isValidEmail(email) {
 }
 
 function validateFormData(data) {
-    for (const [key, value] of Object.entries(data)) {
-        if (!value.trim()) {
-            showNotification(`El campo ${key} es obligatorio`, 'bg-red-500');
-            return false;
-        }
-    }
 
     if (!isValidEmail(data.correo)) {
         new Audio('../../songs/error.mp3').play().catch(error => console.error("Error al reproducir el sonido:", error));

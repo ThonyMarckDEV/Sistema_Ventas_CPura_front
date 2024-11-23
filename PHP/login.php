@@ -93,6 +93,9 @@
     <!-- Scripts -->
     <script type="module" src="../../js/login.js"></script>
     <script type="module" src="../../js/reset-password.js"></script>
+        <!-- Incluir el script al final del body para mejorar la carga -->
+        <script type="module" src="../js/click-sound.js"></script>
+    <script type="module" src="../js/typing-sound.js"></script>
 </body>
 </html>
 
