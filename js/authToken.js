@@ -1,5 +1,4 @@
 import API_BASE_URL from './urlHelper.js';
-
 import { logout as logoutAndRedirect } from './logout.js';
 
 // Función para verificar si el token está próximo a expirar
@@ -14,19 +13,11 @@ function tokenExpirado() {
     const exp = payload.exp * 1000; // Convertir a milisegundos
     const isExpiring = Date.now() > exp - 120000; // Renovar 2 minutos antes de expirar
 
-    console.log(`Verificación de token: expira en ${(exp - Date.now()) / 1000} segundos.`);
-    if (isExpiring) {
-        console.log("El token está próximo a expirar, se intentará renovar.");
-    } else {
-        console.log("El token aún es válido, no se requiere renovación.");
-    }
-    
     return isExpiring;
 }
 
 // Función para renovar el token
 export async function renovarToken() {
-    console.log("Intentando renovar el token...");
     const token = localStorage.getItem('jwt');
 
     try {
@@ -42,10 +33,11 @@ export async function renovarToken() {
             const data = await response.json();
             const nuevoToken = data.accessToken;
             localStorage.setItem('jwt', nuevoToken); // Guarda el nuevo token inmediatamente
-            console.log("Token renovado exitosamente y guardado en localStorage.");
             return nuevoToken;
+        } else if (response.status === 401) {
+            showNotification('El token ha expirado. Recargando la página...', 'bg-red-500');
+            setTimeout(() => window.location.reload(), 3000);
         } else {
-            console.error("No se pudo renovar el token. Redirigiendo al login...");
             logoutAndRedirect();
         }
     } catch (error) {
@@ -56,7 +48,6 @@ export async function renovarToken() {
 
 // Función que verifica y renueva el token si es necesario
 export async function verificarYRenovarToken() {
-    console.log("Verificando si el token necesita renovación...");
     if (tokenExpirado()) {
         const nuevoToken = await renovarToken();
         if (nuevoToken) {
@@ -69,9 +60,9 @@ export async function verificarYRenovarToken() {
     }
 }
 
-
+// Función para decodificar el token
 function parseJwt(token) {
-    if (!token) return null; // Agrega esta verificación
+    if (!token) return null; // Verificación adicional
     try {
         const base64Url = token.split('.')[1];
         const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -85,5 +76,53 @@ function parseJwt(token) {
     } catch (error) {
         console.error("Error al decodificar el token JWT:", error);
         return null;
+    }
+}
+
+// Función para mostrar notificaciones
+function showNotification(message, type = 'bg-green-500') {
+    const notification = document.getElementById('notification');
+    if (!notification) {
+        console.error("No se encontró el elemento de notificación.");
+        return;
+    }
+
+    notification.textContent = message;
+    notification.className = `fixed top-4 left-1/2 transform -translate-x-1/2 px-4 py-2 rounded shadow-md z-50 text-white text-center ${type}`;
+    notification.classList.remove('hidden');
+
+    setTimeout(() => {
+        notification.classList.add('hidden');
+    }, 3000); // Ocultar después de 3 segundos
+}
+
+// Función para realizar una solicitud con manejo de errores
+export async function realizarSolicitud(url, options = {}) {
+    await verificarYRenovarToken();
+
+    try {
+        const token = localStorage.getItem('jwt');
+        const response = await fetch(`${API_BASE_URL}${url}`, {
+            ...options,
+            headers: {
+                ...options.headers,
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (response.ok) {
+            return await response.json();
+        } else if (response.status === 401) {
+            showNotification('No autorizado. Recargando la página...', 'bg-red-500');
+            setTimeout(() => window.location.reload(), 3000);
+        } else {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Error en la solicitud');
+        }
+    } catch (error) {
+        console.error('Error en la solicitud:', error);
+        showNotification(error.message || 'Error desconocido al procesar la solicitud', 'bg-red-500');
+        throw error;
     }
 }
